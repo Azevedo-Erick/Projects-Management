@@ -255,11 +255,11 @@ classDiagram
     ActivityLog "*" --> "1" Person
 ```
 
-#### Diagrama de Casos de Uso
+#### Requisitos
 
-```mermaid
-
-```
+| Número de ordem | Nome do Requisito | Descrição                                                                            | Nome UC | Prioridade (Essencial, Importante, Desejável) |
+| --------------- | ----------------- | ------------------------------------------------------------------------------------ | ------- | --------------------------------------------- |
+| RF001           | Cadastrar ticket  | Deve ser possivel o usuario cadastar um ticket de algum problema que teve no sistema | UC001   | Desejável                                     |
 
 #### Diagrama de Entidade Relacional
 
