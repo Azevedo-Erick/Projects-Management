@@ -73,8 +73,17 @@ classDiagram
         -Tag Tag
         -List<Issue> Issues
         -DateTime StartDate
+        -DateTime ConclusionDate
         -string Description
         -DateTime Deadline
+    }
+
+    class TASK_PRIORITY{
+        MINIMAL
+        LOW
+        MEDIUM
+        HIGH
+        CRITICAL
     }
     
     class Issue {
@@ -135,6 +144,7 @@ classDiagram
         -int Id
         -string Name
         -Person Manager
+        -string Release
         -List<Squad> Squads
         -List<Task> Tasks
         -List<Milestone> Milestones
@@ -157,7 +167,7 @@ classDiagram
         -List<Task> Tasks
     }
 
-    class Call{
+    class Ticket{
         -int Id
         -string Title
         -string Description
@@ -169,6 +179,13 @@ classDiagram
         -DateTime ResolutionDate
     }
 
+    class TicketComment{
+        -int Id
+        -Ticket Ticket
+        -Person Author
+        -string Text
+    }
+
     class Notification {
     -int Id
     -string Message
@@ -176,7 +193,7 @@ classDiagram
     -bool IsRead
     -DateTime CreatedAt
     -Person Recipient
-}
+    }
 
     class NotificationType{
         -int Id
@@ -187,8 +204,22 @@ classDiagram
     -int Id
     -Person Pessoa
     -List<Project> Projects
-}
+    }
+    
+    class ActivityLog{
+        -int Id
+        -DateTime Timestamp
+        -Person Person
+        -ActivityType ActivityType
+        -string Description
+    }
 
+    class ActivityType{
+        -int Id
+        -string Name
+    }
+
+  
 	Project "*"-->"*" Squad 
 	Project "*"-->"1" Person 
 	Squad "*" --> "1" Person 
@@ -200,16 +231,17 @@ classDiagram
 	Task "*" --> "*" Person 
 	Issue "*" --> "1" Task 
 	Tag "1" --> "*" Task 
-	Milestone "*" -- "1" Task 
+	Milestone "1" -- "*" Task 
+	Project "1" -- "*" Milestone 
 	Stakeholder "*" -- "1" Person 
 	Stakeholder "*" -- "*" Task 
 	Stakeholder "*" -- "*" Project
 	Stakeholder "1" --> "*" Address 
 	Stakeholder "0..**" --> "*" ContactInfo 
-    Call"0..*" --o "1" Project
-    Call "*"--> "1" Person
-    Call "1"-->"1" Task
-    Call "1"-->"1" Issue
+    Ticket"0..*" --o "1" Project
+    Ticket "*"--> "1" Person
+    Ticket "1"-->"1" Task
+    Ticket "1"-->"*" TicketComment
     ContactInfo "*"-->"1" ContactType
     Role "*" --> "*" Permission
     Permission "*" --> "1" PERMISSION_TYPE
@@ -218,6 +250,9 @@ classDiagram
     Address "*"-->"1" City
     City "*"-->"1" State
     State "*"-->"1" Country
+    Task "*" --> "1" TASK_PRIORITY
+    ActivityLog "*" --> "1" ActivityType
+    ActivityLog "*" --> "1" Person
 ```
 
 #### Diagrama de Casos de Uso
