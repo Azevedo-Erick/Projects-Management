@@ -93,11 +93,26 @@ classDiagram
         -string Number
         -string Complement
         -string Neighborhood
-        -string City
-        -string State
-        -string Country
+        -City City
         -string ZipCode
     } 
+
+    class City{
+        -int Id
+        -string Name
+        -State State
+    }
+
+    class State{
+        -int Id
+        -string Name
+        -Country Name
+    }
+
+    class Country{
+        -int Id
+        -string Name
+    }
     
     class ContactInfo {
         -int Id
@@ -155,24 +170,24 @@ classDiagram
     }
 
     class Notification {
-		-int Id
-		-string Message
-		-NotificationType Type
-		-bool IsRead
-		-DateTime CreatedAt
-		-Person Recipient
-	}
+    -int Id
+    -string Message
+    -NotificationType Type
+    -bool IsRead
+    -DateTime CreatedAt
+    -Person Recipient
+}
 
     class NotificationType{
         -int Id
         -string Name
     }
 
-    class Stakeholder {
-		-int Id
-		-Person Pessoa
-		-List<Project> Projects
-	}
+	class Stakeholder {
+    -int Id
+    -Person Pessoa
+    -List<Project> Projects
+}
 
 	Project "*"-->"*" Squad 
 	Project "*"-->"1" Person 
@@ -191,15 +206,18 @@ classDiagram
 	Stakeholder "*" -- "*" Project
 	Stakeholder "1" --> "*" Address 
 	Stakeholder "0..**" --> "*" ContactInfo 
-    	Call"0..*" --o "1" Project
-    	Call "*"--> "1" Person
-    	Call "1"-->"1" Task
-    	Call "1"-->"1" Issue
-    	ContactInfo "*"-->"1" ContactType
-    	Role "*" --> "*" Permission
-	Permission "*" --> "1" PERMISSION_TYPE
-    	Notification "*" --> "1" NotificationType
-    	Person "1"-->"*"Notification
+    Call"0..*" --o "1" Project
+    Call "*"--> "1" Person
+    Call "1"-->"1" Task
+    Call "1"-->"1" Issue
+    ContactInfo "*"-->"1" ContactType
+    Role "*" --> "*" Permission
+    Permission "*" --> "1" PERMISSION_TYPE
+    Notification "*" --> "1" NotificationType
+    Person "1"-->"*"Notification
+    Address "*"-->"1" City
+    City "*"-->"1" State
+    State "*"-->"1" Country
 ```
 
 #### Diagrama de Casos de Uso
