@@ -34,12 +34,10 @@ classDiagram
         -Role Role
         -List<Skill> Skills
         -List<Task> Tasks
-        -List<Address> Addresses
-        -List<ContactInfo> ContactInfos
         -DateTime DateOfBirth
         -string ProfileImage
-        +int GetAge()
-        +bool Login(string email, string password)
+        -List<ContactInfo> ContactInfos
+        -List<Address> Addresses
     }
     
     class Skill {
@@ -50,8 +48,23 @@ classDiagram
     class Role {
         -int Id
         -string Name
+        -List<Permission> Permissions
     } 
     
+
+    class Permission{
+        -int Id
+        -PERMISSION_TYPE Type
+        -string Name
+    }
+
+    class PERMISSION_TYPE{
+        CREATE,
+        READ
+        UPDATE,
+        DELETE,
+    }
+
     class Task {
         -int Id
         -string Title
@@ -62,10 +75,6 @@ classDiagram
         -DateTime StartDate
         -string Description
         -DateTime Deadline
-        +void AddAssignee(Person assignee)
-        +void RemoveAssignee(Person assignee)
-        +void AddIssue(Issue issue)
-        +void RemoveIssue(Issue issue)
     }
     
     class Issue {
@@ -92,8 +101,13 @@ classDiagram
     
     class ContactInfo {
         -int Id
-        -string Type
+        -ContactType Type
         -string Value
+    }
+
+    class ContactType{
+        -int Id
+        -string Name
     }
 	
     class Tag {
@@ -109,12 +123,6 @@ classDiagram
         -List<Squad> Squads
         -List<Task> Tasks
         -List<Milestone> Milestones
-        +void AddSquad(Squad squad)
-        +void RemoveSquad(Squad squad)
-        +void AddTask(Task task)
-        +void RemoveTask(Task task)
-        +void AddMilestone(Milestone milestone)
-        +void RemoveMilestone(Milestone milestone)
     }
     
     class Squad {
@@ -123,10 +131,6 @@ classDiagram
         -Person Leader
         -List<Person> Team
         -List<Task> Tasks
-        +void AddTeamMember(Person member)
-        +void RemoveTeamMember(Person member)
-        +void AddTask(Task task)
-        +void RemoveTask(Task task)
     }
     
     class Milestone {
@@ -136,23 +140,39 @@ classDiagram
         -DateTime StartDate
         -DateTime Deadline
         -List<Task> Tasks
-        +void AddTask(Task task)
-        +void RemoveTask(Task task)
     }
 
-	 class Stakeholder {
-    -int Id
-    -string Name
-    -List<ContactInfo> ContactInfos
-    -List<Address> Addresses
-    -List<Project> Projects
-    +void AddAddress(Address address)
-    +void RemoveAddress(Address address)
-    +void AddContactInfo(ContactInfo contactInfo)
-    +void RemoveContactInfo(ContactInfo contactInfo)
-    +void AddProject(Project project)
-    +void RemoveProject(Project project)
-}
+    class Call{
+        -int Id
+        -string Title
+        -string Description
+        -DateTime CreatedAt
+        -Person Author
+        -Project Project
+        -Task Task
+        -List<Issue> Issues
+        -DateTime ResolutionDate
+    }
+
+    class Notification {
+		-int Id
+		-string Message
+		-NotificationType Type
+		-bool IsRead
+		-DateTime CreatedAt
+		-Person Recipient
+	}
+
+    class NotificationType{
+        -int Id
+        -string Name
+    }
+
+    class Stakeholder {
+		-int Id
+		-Person Pessoa
+		-List<Project> Projects
+	}
 
 	Project "*"-->"*" Squad 
 	Project "*"-->"1" Person 
@@ -171,6 +191,15 @@ classDiagram
 	Stakeholder "*" -- "*" Project
 	Stakeholder "1" --> "*" Address 
 	Stakeholder "0..**" --> "*" ContactInfo 
+    	Call"0..*" --o "1" Project
+    	Call "*"--> "1" Person
+    	Call "1"-->"1" Task
+    	Call "1"-->"1" Issue
+    	ContactInfo "*"-->"1" ContactType
+    	Role "*" --> "*" Permission
+	Permission "*" --> "1" PERMISSION_TYPE
+    	Notification "*" --> "1" NotificationType
+    	Person "1"-->"*"Notification
 ```
 
 #### Diagrama de Casos de Uso
