@@ -26,14 +26,19 @@ Um projeto para estudo do .net 6, tem como ideia ser um projeto que permita a ge
 
 ```mermaid
 classDiagram
+    class Employee{
+        -int Id
+        -List<Skill> Skills
+        -List<Task> Tasks
+        -Person Person
+    }
+
      class Person {
         -int Id
         -string Name
         -string Email
         -string PasswordHash
         -Role Role
-        -List<Skill> Skills
-        -List<Task> Tasks
         -DateTime DateOfBirth
         -string ProfileImage
         -List<ContactInfo> ContactInfos
@@ -69,7 +74,7 @@ classDiagram
         -int Id
         -string Title
         -Person Assigner
-        -List<Person> AssignedTo
+        -List<Employee> AssignedTo
         -Tag Tag
         -List<Issue> Issues
         -DateTime StartDate
@@ -154,7 +159,7 @@ classDiagram
         -int Id
         -string Name
         -Person Leader
-        -List<Person> Team
+        -List<Employee> Team
         -List<Task> Tasks
     }
     
@@ -213,7 +218,6 @@ classDiagram
         -ActivityType ActivityType
         -string Description
     }
-
     class ActivityType{
         -int Id
         -string Name
@@ -222,13 +226,13 @@ classDiagram
   
 	Project "*"-->"*" Squad 
 	Project "*"-->"1" Person 
-	Squad "*" --> "1" Person 
-	Squad "*" --> "*" Person 
-	Person "*" --> "*" Skill 
+	Squad "*" --> "1" Employee 
+	Squad "*" --> "*" Employee 
+	Employee "*" --> "*" Skill 
 	Person "*" --> "*" Role 
 	Person "1" --> "1" Address 
 	Person "0..**" --> "*" ContactInfo 
-	Task "*" --> "*" Person 
+	Task "*" --> "*" Employee 
 	Issue "*" --> "1" Task 
 	Tag "1" --> "*" Task 
 	Milestone "1" -- "*" Task 
@@ -253,6 +257,8 @@ classDiagram
     Task "*" --> "1" TASK_PRIORITY
     ActivityLog "*" --> "1" ActivityType
     ActivityLog "*" --> "1" Person
+    Employee "1" --> "1" Person
+
 ```
 
 #### Requisitos
