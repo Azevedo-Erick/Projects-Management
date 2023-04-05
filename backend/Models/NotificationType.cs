@@ -1,7 +1,7 @@
 namespace ProjectsManagement.Models;
 
-public class NotificationType
+public class NotificationType : BaseEntity
 {
-    public int Id { get; set; }
+
     public string Name { get; set; }
 }

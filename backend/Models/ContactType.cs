@@ -1,7 +1,7 @@
 namespace ProjectsManagement.Models;
 
-public class ContactType
+public class ContactType : BaseEntity
 {
-    public int Id { get; set; }
+
     public string Name { get; set; }
 }

@@ -1,8 +1,8 @@
 namespace ProjectsManagement.Models;
 
-public class Project
+public class Project : BaseEntity
 {
-    public int Id { get; set; }
+
     public string Name { get; set; }
     public Person Manager { get; set; }
     public string Release { get; set; }

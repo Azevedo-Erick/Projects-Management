@@ -1,8 +1,8 @@
 namespace ProjectsManagement.Models;
 
-public class Ticket
+public class Ticket : BaseEntity
 {
-    public int Id { get; set; }
+
     public string Title { get; set; }
     public string Description { get; set; }
     public Person Author { get; set; }

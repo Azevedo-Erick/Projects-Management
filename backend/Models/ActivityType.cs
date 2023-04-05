@@ -1,8 +1,9 @@
 namespace ProjectsManagement.Models;
 
 
-public class ActivityType
+public class ActivityType : BaseEntity
 {
-    public int Id { get; set; }
+
     public string Name { get; set; }
+    public List<ActivityLog> Logs { get; set; }
 }

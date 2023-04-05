@@ -1,8 +1,8 @@
 namespace ProjectsManagement.Models;
 
-public class ActivityLog
+public class ActivityLog : BaseEntity
 {
-    public int Id { get; set; }
+
     public DateTime Timestamp { get; set; }
     public Person Person { get; set; }
     public ActivityType ActivityType { get; set; }

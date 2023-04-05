@@ -1,8 +1,8 @@
 namespace ProjectsManagement.Models;
 
-public class Stakeholder
+public class Stakeholder : BaseEntity
 {
-    public int Id { get; set; }
+
     public Person Person { get; set; }
     public List<Project> Projects { get; set; }
 
