@@ -1,14 +1,16 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ProjectsManagement.Data.Configurations;
 using ProjectsManagement.Models;
 
 namespace ProjectsManagement.Data.Mappings;
 
-public class NotificationTypeMap : IEntityTypeConfiguration<NotificationType>
+public class NotificationTypeMap : BaseEntityConfiguration<NotificationType>
 {
-    public void Configure(EntityTypeBuilder<NotificationType> builder)
+    public new void Configure(EntityTypeBuilder<NotificationType> builder)
     {
-        throw new NotImplementedException();
+        builder.Property(x => x.Name).IsRequired().HasColumnName("Name");
+
     }
 }

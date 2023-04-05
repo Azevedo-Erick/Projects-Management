@@ -2,13 +2,16 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ProjectsManagement.Models;
+using ProjectsManagement.Data.Configurations;
 
 namespace ProjectsManagement.Data.Mappings;
 
-public class TagMap : IEntityTypeConfiguration<Tag>
+public class TagMap : BaseEntityConfiguration<Tag>
 {
-    public void Configure(EntityTypeBuilder<Tag> builder)
+    public new void Configure(EntityTypeBuilder<Tag> builder)
     {
-        throw new NotImplementedException();
+        builder.Property(x => x.Title).IsRequired().HasColumnName("Title");
+        builder.Property(x => x.HexColor).IsRequired().HasColumnName("HexColor");
+
     }
 }

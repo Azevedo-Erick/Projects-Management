@@ -3,12 +3,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ProjectsManagement.Models;
 
+using ProjectsManagement.Data.Configurations;
 namespace ProjectsManagement.Data.Mappings;
 
-public class SquadMap : IEntityTypeConfiguration<Squad>
+public class SquadMap : BaseEntityConfiguration<Squad>
 {
-    public void Configure(EntityTypeBuilder<Squad> builder)
+    public new void Configure(EntityTypeBuilder<Squad> builder)
     {
-        throw new NotImplementedException();
+        builder.Property(x => x.Name).IsRequired().HasColumnName("Name");
+        builder.HasOne(x => x.Leader);
+        builder.HasMany(x => x.Team);
+
+
     }
 }

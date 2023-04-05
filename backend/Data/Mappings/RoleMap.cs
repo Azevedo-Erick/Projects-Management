@@ -2,13 +2,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ProjectsManagement.Models;
+using ProjectsManagement.Data.Configurations;
 
 namespace ProjectsManagement.Data.Mappings;
 
-public class RoleMap : IEntityTypeConfiguration<Role>
+public class RoleMap : BaseEntityConfiguration<Role>
 {
-    public void Configure(EntityTypeBuilder<Role> builder)
+    public new void Configure(EntityTypeBuilder<Role> builder)
     {
-        throw new NotImplementedException();
+        builder.HasMany(x => x.Permissions);
+
     }
 }

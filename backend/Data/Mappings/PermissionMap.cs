@@ -1,14 +1,18 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ProjectsManagement.Data.Configurations;
 using ProjectsManagement.Models;
 
 namespace ProjectsManagement.Data.Mappings;
 
-public class PermissionMap : IEntityTypeConfiguration<Permission>
+public class PermissionMap : BaseEntityConfiguration<Permission>
 {
-    public void Configure(EntityTypeBuilder<Permission> builder)
+    public new void Configure(EntityTypeBuilder<Permission> builder)
     {
-        throw new NotImplementedException();
+
+        builder.Property(x => x.Name).IsRequired().HasColumnName("Name");
+        builder.Property(x => x.Has).IsRequired().HasColumnName("Has");
+
     }
 }

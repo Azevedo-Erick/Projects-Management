@@ -1,14 +1,24 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ProjectsManagement.Data.Configurations;
 using ProjectsManagement.Models;
 
 namespace ProjectsManagement.Data.Mappings;
 
-public class PersonMap : IEntityTypeConfiguration<Person>
+public class PersonMap : BaseEntityConfiguration<Person>
 {
-    public void Configure(EntityTypeBuilder<Person> builder)
+    public new void Configure(EntityTypeBuilder<Person> builder)
     {
-        throw new NotImplementedException();
+        builder.Property(x => x.Email).IsRequired().HasColumnName("Email");
+        builder.Property(x => x.PasswordHash).IsRequired().HasColumnName("PasswordHash");
+        builder.Property(x => x.DateOfBirth).IsRequired().HasColumnName("DateOfBirth");
+        builder.Property(x => x.ProfileImage).IsRequired().HasColumnName("ProfileImage");
+        builder.HasOne(x => x.Role);
+        builder.HasOne(x => x.Address);
+        builder.HasMany(x => x.Contacts);
+
+
+
     }
 }

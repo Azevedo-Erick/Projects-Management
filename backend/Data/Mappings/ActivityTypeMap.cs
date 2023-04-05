@@ -1,13 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ProjectsManagement.Data.Configurations;
 using ProjectsManagement.Models;
 
 namespace ProjectsManagement.Data.Mappings;
 
-public class ActivityTypeMap : IEntityTypeConfiguration<ActivityType>
+public class ActivityTypeMap : BaseEntityConfiguration<ActivityType>
 {
-    public void Configure(EntityTypeBuilder<ActivityType> builder)
+    public new void Configure(EntityTypeBuilder<ActivityType> builder)
     {
-        throw new NotImplementedException();
+        builder.ToTable("ActivityType");
+
+        builder.Property(x => x.Name).IsRequired().HasColumnName("Name").HasMaxLength(255);
     }
 }

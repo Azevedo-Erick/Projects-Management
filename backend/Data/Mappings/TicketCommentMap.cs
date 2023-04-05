@@ -2,13 +2,18 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ProjectsManagement.Models;
+using ProjectsManagement.Data.Configurations;
 
 namespace ProjectsManagement.Data.Mappings;
 
-public class TicketCommentMap : IEntityTypeConfiguration<TicketComment>
+public class TicketCommentMap : BaseEntityConfiguration<TicketComment>
 {
-    public void Configure(EntityTypeBuilder<TicketComment> builder)
+    public new void Configure(EntityTypeBuilder<TicketComment> builder)
     {
-        throw new NotImplementedException();
+        builder.Property(x => x.Text).IsRequired().HasColumnName("Text");
+        builder.HasOne(x => x.Author);
+        builder.HasOne(x => x.Ticket);
+
+
     }
 }
