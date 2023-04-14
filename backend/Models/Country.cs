@@ -9,6 +9,7 @@ public class Country : BaseEntity
 
     public Country()
     {
+        Name = "";
     }
 
     public string Name { get; set; }

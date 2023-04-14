@@ -8,4 +8,29 @@ public class State : BaseEntity
 
 
     public int CountryId { get; set; }
+
+    public State(string name, Country country, int countryId)
+    {
+        Name = name;
+        Country = country;
+        CountryId = countryId;
+    }
+
+    public State(string name, Country country)
+    {
+        Name = name;
+        Country = country;
+    }
+
+    public State(string name, int countryId)
+    {
+        Name = name;
+        CountryId = countryId;
+        Country = new Country();
+    }
+
+    public State()
+    {
+        Name = "";
+    }
 }
