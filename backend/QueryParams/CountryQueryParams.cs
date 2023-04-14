@@ -4,10 +4,10 @@ using AspNetCore.IQueryable.Extensions.Filter;
 
 namespace ProjectsManagement.QueryParams;
 
-public class ContryQueryParams : ICustomQueryable
+public class CountryQueryParams : ICustomQueryable
 {
     [QueryOperator(Operator = WhereOperator.Contains)]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
 
 }
