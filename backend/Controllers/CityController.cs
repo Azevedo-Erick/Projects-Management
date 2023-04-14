@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProjectsManagement.Data;
 using ProjectsManagement.Models;
 
 namespace ProjectsManagement.Controllers;
@@ -8,6 +9,12 @@ namespace ProjectsManagement.Controllers;
 [Authorize]
 public class CityController : ControllerBase
 {
+    ProjectsManagementContext Context;
+
+    CityController(ProjectsManagementContext context)
+    {
+        Context = context;
+    }
 
     [AllowAnonymous]
     [HttpGet("/v1/cities")]
