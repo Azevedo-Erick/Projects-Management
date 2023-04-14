@@ -25,7 +25,7 @@ public class CountryController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet("/v1/countries")]
-    public async Task<IActionResult> Get([FromQuery] ContryQueryParams queryParams)
+    public async Task<IActionResult> Get([FromQuery] CountryQueryParams queryParams)
     {
         var data = await Context.Countries.AsQueryable().Apply(queryParams).ToListAsync();
         return StatusCode(
