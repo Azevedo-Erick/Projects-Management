@@ -2,13 +2,13 @@ using ProjectsManagement.Dtos.Country;
 using ProjectsManagement.Dtos.State;
 using ProjectsManagement.Models;
 
-namespace ProjectsManagement.Factories;
+namespace ProjectsManagement.Mappers;
 
-public static class StateFactory
+public static class StateMapper
 {
     public static ResponseStateDto FromModelToDto(State model)
     {
-        return new ResponseStateDto(model.Name, CountryFactory.FromModelToDto(model.Country));
+        return new ResponseStateDto(model.Name, CountryMapper.FromModelToDto(model.Country));
     }
     public static State FromDtoToModel(CreateStateDto dto)
     {

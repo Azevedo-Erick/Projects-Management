@@ -2,9 +2,9 @@ using ProjectsManagement.Dtos.ContactInfo;
 using ProjectsManagement.Dtos.ContactType;
 using ProjectsManagement.Models;
 
-namespace ProjectsManagement.Factories;
+namespace ProjectsManagement.Mappers;
 
-public static class ContactInfoFactory
+public static class ContactInfoMapper
 {
 
     public static ResponseContactInfoDto FromModelToDto(ContactInfo model)

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjectsManagement.Data;
 using ProjectsManagement.Dtos;
 using ProjectsManagement.Dtos.City;
-using ProjectsManagement.Factories;
+using ProjectsManagement.Mappers;
 using ProjectsManagement.Models;
 using ProjectsManagement.QueryParams;
 
@@ -36,7 +36,7 @@ public class CityController : ControllerBase
             200,
             new BaseResponseDto<ResponseCityDto>(
                 data.Select(
-                        x => CityFactory.FromModelToDto(x)
+                        x => CityMapper.FromModelToDto(x)
                     ).ToList()
                 )
             );
@@ -62,7 +62,7 @@ public class CityController : ControllerBase
         return StatusCode(
             200,
             new BaseResponseDto<ResponseCityDto>(
-                    CityFactory.FromModelToDto(data)
+                    CityMapper.FromModelToDto(data)
                 )
             );
 
@@ -74,7 +74,7 @@ public class CityController : ControllerBase
     public async Task<IActionResult> Post(CreateCityDto dto)
     {
         if (!ModelState.IsValid) { }
-        var data = CityFactory.FromDtoToModel(dto);
+        var data = CityMapper.FromDtoToModel(dto);
         //data.State = ;
         await Context.Cities.AddAsync(data);
         Context.SaveChanges();
@@ -82,7 +82,7 @@ public class CityController : ControllerBase
         return StatusCode(
            200,
            new BaseResponseDto<ResponseCityDto>(
-                   CityFactory.FromModelToDto(data)
+                   CityMapper.FromModelToDto(data)
                )
            );
     }
@@ -100,7 +100,7 @@ public class CityController : ControllerBase
             return StatusCode(
             400);
         }
-        var data = CityFactory.FromDtoToModel(dto);
+        var data = CityMapper.FromDtoToModel(dto);
         element.Name = data.Name;
         element.State = data.State;
 
@@ -109,7 +109,7 @@ public class CityController : ControllerBase
         return StatusCode(
            200,
            new BaseResponseDto<ResponseCityDto>(
-                   CityFactory.FromModelToDto(element)
+                   CityMapper.FromModelToDto(element)
                )
            );
     }

@@ -3,13 +3,13 @@ using ProjectsManagement.Dtos.Country;
 using ProjectsManagement.Dtos.State;
 using ProjectsManagement.Models;
 
-namespace ProjectsManagement.Factories;
+namespace ProjectsManagement.Mappers;
 
-public static class CityFactory
+public static class CityMapper
 {
     public static ResponseCityDto FromModelToDto(City model)
     {
-        return new ResponseCityDto(model.Name, StateFactory.FromModelToDto(model.State));
+        return new ResponseCityDto(model.Name, StateMapper.FromModelToDto(model.State));
     }
     public static City FromDtoToModel(CreateCityDto dto)
     {

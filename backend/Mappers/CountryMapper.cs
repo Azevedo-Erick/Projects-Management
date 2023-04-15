@@ -1,9 +1,9 @@
 using ProjectsManagement.Dtos.Country;
 using ProjectsManagement.Models;
 
-namespace ProjectsManagement.Factories;
+namespace ProjectsManagement.Mappers;
 
-public static class CountryFactory
+public static class CountryMapper
 {
     public static ResponseCountryDto FromModelToDto(Country country)
     {

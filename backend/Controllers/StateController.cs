@@ -6,7 +6,7 @@ using ProjectsManagement.Data;
 using ProjectsManagement.Dtos;
 using ProjectsManagement.Dtos.Country;
 using ProjectsManagement.Dtos.State;
-using ProjectsManagement.Factories;
+using ProjectsManagement.Mappers;
 using ProjectsManagement.Models;
 
 namespace ProjectsManagement.Controllers;
@@ -34,7 +34,7 @@ public class StateController : ControllerBase
             200,
             new BaseResponseDto<ResponseStateDto>(
                 data.Select(
-                        x => StateFactory.FromModelToDto(x)
+                        x => StateMapper.FromModelToDto(x)
                     ).ToList()
                 )
             );
@@ -56,7 +56,7 @@ public class StateController : ControllerBase
         return StatusCode(
            200,
            new BaseResponseDto<ResponseStateDto>(
-                   StateFactory.FromModelToDto(data)
+                   StateMapper.FromModelToDto(data)
                )
            );
     }
@@ -67,7 +67,7 @@ public class StateController : ControllerBase
     public async Task<IActionResult> Post(CreateStateDto dto)
     {
         if (!ModelState.IsValid) { }
-        var data = StateFactory.FromDtoToModel(dto);
+        var data = StateMapper.FromDtoToModel(dto);
         //data.State = ;
         await Context.States.AddAsync(data);
         Context.SaveChanges();
@@ -75,7 +75,7 @@ public class StateController : ControllerBase
         return StatusCode(
            200,
            new BaseResponseDto<ResponseStateDto>(
-                   StateFactory.FromModelToDto(data)
+                   StateMapper.FromModelToDto(data)
                )
            );
 
@@ -94,7 +94,7 @@ public class StateController : ControllerBase
             return StatusCode(
             400);
         }
-        var data = StateFactory.FromDtoToModel(dto);
+        var data = StateMapper.FromDtoToModel(dto);
         element.Name = data.Name;
         element.Country = data.Country;
 
@@ -103,7 +103,7 @@ public class StateController : ControllerBase
         return StatusCode(
            200,
            new BaseResponseDto<ResponseStateDto>(
-                   StateFactory.FromModelToDto(element)
+                   StateMapper.FromModelToDto(element)
                )
            );
 

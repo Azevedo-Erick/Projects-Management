@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjectsManagement.Data;
 using ProjectsManagement.Dtos;
 using ProjectsManagement.Dtos.Country;
-using ProjectsManagement.Factories;
+using ProjectsManagement.Mappers;
 using ProjectsManagement.Models;
 using ProjectsManagement.QueryParams;
 
@@ -32,7 +32,7 @@ public class CountryController : ControllerBase
             200,
             new BaseResponseDto<ResponseCountryDto>(
                 data.Select(
-                        x => CountryFactory.FromModelToDto(x)
+                        x => CountryMapper.FromModelToDto(x)
                     ).ToList()
                 )
             );
@@ -50,7 +50,7 @@ public class CountryController : ControllerBase
         return StatusCode(
            200,
            new BaseResponseDto<ResponseCountryDto>(
-                   CountryFactory.FromModelToDto(data)
+                   CountryMapper.FromModelToDto(data)
                )
            );
 
@@ -63,7 +63,7 @@ public class CountryController : ControllerBase
     {
         if (!ModelState.IsValid) { }
 
-        var data = CountryFactory.FromDtoToModel(dto);
+        var data = CountryMapper.FromDtoToModel(dto);
 
         await Context.Countries.AddAsync(data);
         Context.SaveChanges();
@@ -71,7 +71,7 @@ public class CountryController : ControllerBase
         return StatusCode(
            200,
            new BaseResponseDto<ResponseCountryDto>(
-                   CountryFactory.FromModelToDto(data)
+                   CountryMapper.FromModelToDto(data)
                )
            );
     }
@@ -91,7 +91,7 @@ public class CountryController : ControllerBase
             400);
         }
 
-        var data = CountryFactory.FromDtoToModel(dto);
+        var data = CountryMapper.FromDtoToModel(dto);
 
         element.Name = data.Name;
         Context.Countries.Update(element);
@@ -101,7 +101,7 @@ public class CountryController : ControllerBase
         return StatusCode(
            200,
            new BaseResponseDto<ResponseCountryDto>(
-                   CountryFactory.FromModelToDto(element)
+                   CountryMapper.FromModelToDto(element)
                )
            );
     }
