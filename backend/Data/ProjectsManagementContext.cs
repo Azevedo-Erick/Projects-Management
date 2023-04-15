@@ -13,8 +13,8 @@ public class ProjectsManagementContext : DbContext
     public DbSet<ActivityType> ActivityTypes { get; set; }
     public DbSet<Address> Addresses { get; set; } */
     public DbSet<City> Cities { get; set; }
-    /*  public DbSet<ContactInfo> ContactInfos { get; set; }
-     public DbSet<ContactType> ContactTypes { get; set; } */
+    public DbSet<ContactInfo> ContactInfos { get; set; }
+    public DbSet<ContactType> ContactTypes { get; set; }
     public DbSet<Country> Countries { get; set; }
     public DbSet<State> States { get; set; }
     /*  public DbSet<Employee> Employees { get; set; }
