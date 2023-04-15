@@ -30,7 +30,6 @@ classDiagram
         -int Id
         -List<Skill> Skills
         -List<Task> Tasks
-        -Person Person
     }
 
      class Person {
@@ -38,7 +37,7 @@ classDiagram
         -string Name
         -string Email
         -string PasswordHash
-        -Role Role
+        -List<Permission> Role
         -DateTime DateOfBirth
         -string ProfileImage
         -List<ContactInfo> ContactInfos
@@ -117,6 +116,19 @@ classDiagram
         -State State
     }
 
+    class ProjectMember{
+        <<Abstract>>
+        -int Id
+        -Role Role
+        -Person Person
+    }
+
+    class MemberType{
+        -int Id
+        -string Label
+    }
+    
+
     class State{
         -int Id
         -string Name
@@ -148,7 +160,7 @@ classDiagram
     class Project {
         -int Id
         -string Name
-        -Person Manager
+        -Employee Manager
         -string Release
         -List<Squad> Squads
         -List<Task> Tasks
@@ -158,7 +170,7 @@ classDiagram
     class Squad {
         -int Id
         -string Name
-        -Person Leader
+        -Employee Leader
         -List<Employee> Team
         -List<Task> Tasks
     }
@@ -207,7 +219,6 @@ classDiagram
 
 	class Stakeholder {
     -int Id
-    -Person Pessoa
     -List<Project> Projects
     }
     
@@ -237,7 +248,6 @@ classDiagram
 	Tag "1" --> "*" Task 
 	Milestone "1" -- "*" Task 
 	Project "1" -- "*" Milestone 
-	Stakeholder "*" -- "1" Person 
 	Stakeholder "*" -- "*" Task 
 	Stakeholder "*" -- "*" Project
 	Stakeholder "1" --> "*" Address 
@@ -257,18 +267,10 @@ classDiagram
     Task "*" --> "1" TASK_PRIORITY
     ActivityLog "*" --> "1" ActivityType
     ActivityLog "*" --> "1" Person
-    Employee "1" --> "1" Person
-
+    Employee  --|>  ProjectMember
+    Stakeholder  --|>  ProjectMember
+    ProjectMember "1"-->"*" MemberType
 ```
 
-#### Requisitos
 
-| Número de ordem | Nome do Requisito | Descrição                                                                            | Nome UC | Prioridade (Essencial, Importante, Desejável) |
-| --------------- | ----------------- | ------------------------------------------------------------------------------------ | ------- | --------------------------------------------- |
-| RF001           | Cadastrar ticket  | Deve ser possivel o usuario cadastar um ticket de algum problema que teve no sistema | UC001   | Desejável                                     |
 
-#### Diagrama de Entidade Relacional
-
-```mermaid
-
-```
