@@ -27,7 +27,8 @@ public class StateController : ControllerBase
     [HttpGet("/v1/states")]
     public async Task<IActionResult> Get([FromQuery] StateQueryParams queryParams)
     {
-        var data = await Context.States.AsQueryable().Apply(queryParams).ToListAsync();
+        var data = await Context.States.AsQueryable().Apply(queryParams)
+            .Include(x => x.Country).AsNoTracking().ToListAsync();
 
         return StatusCode(
             200,
@@ -45,6 +46,7 @@ public class StateController : ControllerBase
     {
         var data = await Context.States.Where(x => x.Id == id)
         .Include(x => x.Country)
+        .AsNoTracking()
         .FirstOrDefaultAsync();
         if (data == null)
         {
