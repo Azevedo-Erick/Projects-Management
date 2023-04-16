@@ -16,18 +16,18 @@ namespace ProjectsManagement.Controllers;
 public class ContactTypeController : ControllerBase
 {
 
-    ProjectsManagementContext Context;
+    private readonly ProjectsManagementContext _context;
 
     public ContactTypeController(ProjectsManagementContext context)
     {
-        this.Context = context;
+        this._context = context;
     }
 
     [AllowAnonymous]
     [HttpGet("/v1/contact-types")]
     public async Task<IActionResult> Get([FromQuery] ContactTypeQueryParams queryParams)
     {
-        var data = await Context.ContactTypes.AsQueryable().Apply(queryParams).AsNoTracking().ToListAsync();
+        var data = await _context.ContactTypes.AsQueryable().Apply(queryParams).AsNoTracking().ToListAsync();
         return StatusCode(
              200,
              new BaseResponseDto<ResponseContactTypeDto>(
@@ -42,7 +42,7 @@ public class ContactTypeController : ControllerBase
     [HttpGet("/v1/contact-types/{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        var data = await Context.ContactTypes.Where(x => x.Id == id).AsNoTracking().FirstOrDefaultAsync();
+        var data = await _context.ContactTypes.Where(x => x.Id == id).AsNoTracking().FirstOrDefaultAsync();
         if (data == null)
         {
             return StatusCode(
@@ -67,8 +67,8 @@ public class ContactTypeController : ControllerBase
         var data = ContactTypeMapper.FromDtoToModel(dto);
 
 
-        await Context.ContactTypes.AddAsync(data);
-        Context.SaveChanges();
+        await _context.ContactTypes.AddAsync(data);
+        _context.SaveChanges();
 
         return StatusCode(
            200,
@@ -85,7 +85,7 @@ public class ContactTypeController : ControllerBase
     {
         if (!ModelState.IsValid) { }
 
-        var data = await Context.ContactTypes.Where(x => x.Id == id).FirstOrDefaultAsync();
+        var data = await _context.ContactTypes.Where(x => x.Id == id).FirstOrDefaultAsync();
 
         if (data == null)
         {
@@ -99,8 +99,8 @@ public class ContactTypeController : ControllerBase
             data.Name = serializedData.Name;
         }
 
-        Context.ContactTypes.Update(data);
-        Context.SaveChanges();
+        _context.ContactTypes.Update(data);
+        _context.SaveChanges();
 
         return StatusCode(
            200,
@@ -116,14 +116,14 @@ public class ContactTypeController : ControllerBase
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
 
-        var data = await Context.ContactTypes.Where(x => x.Id == id).FirstOrDefaultAsync();
+        var data = await _context.ContactTypes.Where(x => x.Id == id).FirstOrDefaultAsync();
 
         if (data == null)
         {
             return StatusCode(400);
         }
-        Context.ContactTypes.Remove(data);
-        Context.SaveChanges();
+        _context.ContactTypes.Remove(data);
+        _context.SaveChanges();
 
         return StatusCode(
            200,

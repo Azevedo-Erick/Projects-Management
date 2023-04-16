@@ -14,20 +14,19 @@ namespace ProjectsManagement.Controllers;
 [ApiController]
 [Authorize]
 public class CountryController : ControllerBase
-{
-
-    ProjectsManagementContext Context;
+{ 
+    private readonly ProjectsManagementContext _context;
 
     CountryController(ProjectsManagementContext context)
     {
-        Context = context;
+        _context = context;
     }
 
     [AllowAnonymous]
     [HttpGet("/v1/countries")]
     public async Task<IActionResult> Get([FromQuery] CountryQueryParams queryParams)
     {
-        var data = await Context.Countries.AsQueryable().Apply(queryParams).ToListAsync();
+        var data = await _context.Countries.AsQueryable().Apply(queryParams).ToListAsync();
         return StatusCode(
             200,
             new BaseResponseDto<ResponseCountryDto>(
@@ -41,7 +40,7 @@ public class CountryController : ControllerBase
     [HttpGet("/v1/countries/{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        var data = await Context.Countries.Where(x => x.Id == id).FirstOrDefaultAsync();
+        var data = await _context.Countries.Where(x => x.Id == id).FirstOrDefaultAsync();
         if (data == null)
         {
             return StatusCode(
@@ -65,8 +64,8 @@ public class CountryController : ControllerBase
 
         var data = CountryMapper.FromDtoToModel(dto);
 
-        await Context.Countries.AddAsync(data);
-        Context.SaveChanges();
+        await _context.Countries.AddAsync(data);
+        _context.SaveChanges();
 
         return StatusCode(
            200,
@@ -83,7 +82,7 @@ public class CountryController : ControllerBase
     {
         if (!ModelState.IsValid) { }
 
-        var element = await Context.Countries.Where(x => x.Id == id).FirstOrDefaultAsync();
+        var element = await _context.Countries.Where(x => x.Id == id).FirstOrDefaultAsync();
 
         if (element == null)
         {
@@ -94,9 +93,9 @@ public class CountryController : ControllerBase
         var data = CountryMapper.FromDtoToModel(dto);
 
         element.Name = data.Name;
-        Context.Countries.Update(element);
+        _context.Countries.Update(element);
 
-        Context.SaveChanges();
+        _context.SaveChanges();
 
         return StatusCode(
            200,
@@ -111,14 +110,14 @@ public class CountryController : ControllerBase
     [HttpDelete("/v1/countries/{id:int}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        var element = await Context.Countries.Where(x => x.Id == id).FirstOrDefaultAsync();
+        var element = await _context.Countries.Where(x => x.Id == id).FirstOrDefaultAsync();
 
         if (element == null)
         {
             return StatusCode(
             400);
         }
-        Context.Countries.Remove(element);
+        _context.Countries.Remove(element);
         return StatusCode(
            200,
            new BaseResponseDto<ResponseCountryDto>()

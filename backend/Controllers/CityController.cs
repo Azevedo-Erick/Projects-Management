@@ -15,18 +15,18 @@ namespace ProjectsManagement.Controllers;
 [Authorize]
 public class CityController : ControllerBase
 {
-    ProjectsManagementContext Context;
+    private readonly ProjectsManagementContext _context;
 
     CityController(ProjectsManagementContext context)
     {
-        Context = context;
+        _context = context;
     }
 
     [AllowAnonymous]
     [HttpGet("/v1/cities")]
     public async Task<IActionResult> Get([FromQuery] CityQueryParams queryParams)
     {
-        var data = await Context.Cities.AsQueryable().Apply(queryParams)
+        var data = await _context.Cities.AsQueryable().Apply(queryParams)
                 .Include(x => x.State)
                     .ThenInclude(x => x.Country)
                 .AsNoTracking()
@@ -47,7 +47,7 @@ public class CityController : ControllerBase
     [HttpGet("/v1/cities/{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        var data = await Context.Cities.Where(x => x.Id == id)
+        var data = await _context.Cities.Where(x => x.Id == id)
                     .Include(x => x.State)
                     .ThenInclude(x => x.Country)
                 .AsNoTracking()
@@ -76,8 +76,8 @@ public class CityController : ControllerBase
         if (!ModelState.IsValid) { }
         var data = CityMapper.FromDtoToModel(dto);
         //data.State = ;
-        await Context.Cities.AddAsync(data);
-        Context.SaveChanges();
+        await _context.Cities.AddAsync(data);
+        _context.SaveChanges();
 
         return StatusCode(
            200,
@@ -93,7 +93,7 @@ public class CityController : ControllerBase
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] CreateCityDto dto)
     {
         if (!ModelState.IsValid) { }
-        var element = await Context.Cities.Where(x => x.Id == id).FirstOrDefaultAsync();
+        var element = await _context.Cities.Where(x => x.Id == id).FirstOrDefaultAsync();
 
         if (element == null)
         {
@@ -104,7 +104,7 @@ public class CityController : ControllerBase
         element.Name = data.Name;
         element.State = data.State;
 
-        Context.SaveChanges();
+        _context.SaveChanges();
 
         return StatusCode(
            200,
@@ -119,14 +119,14 @@ public class CityController : ControllerBase
     [HttpDelete("/v1/cities/{id:int}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        var element = await Context.Cities.Where(x => x.Id == id).FirstOrDefaultAsync();
+        var element = await _context.Cities.Where(x => x.Id == id).FirstOrDefaultAsync();
 
         if (element == null)
         {
             return StatusCode(
             400);
         }
-        Context.Cities.Remove(element);
+        _context.Cities.Remove(element);
         return StatusCode(
            200,
            new BaseResponseDto<ResponseCityDto>()
