@@ -1,6 +1,14 @@
+using AspNetCore.IQueryable.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ProjectsManagement.Data;
+using ProjectsManagement.Data.Mappings;
+using ProjectsManagement.Dtos;
+using ProjectsManagement.Dtos.NotificationType;
+using ProjectsManagement.Mappers;
 using ProjectsManagement.Models;
+using ProjectsManagement.QueryParams;
 
 namespace ProjectsManagement.Controllers;
 
@@ -8,28 +16,92 @@ namespace ProjectsManagement.Controllers;
 [Authorize]
 public class NotificationTypeController : ControllerBase
 {
+    private readonly ProjectsManagementContext _context;
+
+    public NotificationTypeController(ProjectsManagementContext context)
+    {
+        _context = context;
+    }
+
 
     [AllowAnonymous]
     [HttpGet("/v1/notification-types")]
-    public async Task<IActionResult> Get() { return null; }
+    public async Task<IActionResult> Get([FromQuery] NotificationTypeQueryParams queryParams)
+    {
+        var data = await _context.NotificationTypes.AsQueryable().Apply(queryParams).AsNoTracking().ToListAsync();
+        return StatusCode(200, new BaseResponseDto<ResponseNotificationTypeDto>(data.Select(x=>NotificationTypeMapper.FromModelToDto(x)).ToList()));
+    }
 
 
     [HttpGet("/v1/notification-types/{id:int}")]
-    public async Task<IActionResult> GetById([FromRoute] int id) { return null; }
+    public async Task<IActionResult> GetById([FromRoute] int id)
+    {
+        var data = await _context.NotificationTypes.Where(x=>x.Id == id).AsNoTracking().FirstOrDefaultAsync();
+        if (data == null)
+        {
+            return StatusCode(400);
+        }
+        return StatusCode(200, new BaseResponseDto<ResponseNotificationTypeDto>(NotificationTypeMapper.FromModelToDto(data)));
+    }
 
 
 
     [HttpPost("/v1/notification-types")]
-    public async Task<IActionResult> Post(NotificationType dto) { return null; }
+    public async Task<IActionResult> Post(CreateNotificationTypeDto dto)
+    {
+        if (!ModelState.IsValid) { }
+
+        var data = NotificationTypeMapper.FromDtoToModel(dto);
+
+        _context.NotificationTypes.Add(data);
+        await _context.SaveChangesAsync();
+
+        return StatusCode(201,
+            new BaseResponseDto<ResponseNotificationTypeDto>(NotificationTypeMapper.FromModelToDto(data)));
+    }
 
 
 
     [HttpPatch("/v1/notification-types/{id:int}")]
-    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] NotificationType dto) { return null; }
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] CreateNotificationTypeDto dto)
+    {
+        if (!ModelState.IsValid) { }
+
+        var data = await _context.NotificationTypes.Where(x => x.Id == id).FirstOrDefaultAsync();
+
+        if (data == null)
+        {
+            return StatusCode(400);
+        }
+
+        var serializedData = NotificationTypeMapper.FromDtoToModel(dto);
+
+        if (serializedData.Name != data.Name)
+        {
+            data.Name = serializedData.Name;
+        }
+
+        _context.NotificationTypes.Update(data);
+        await _context.SaveChangesAsync();
+        return StatusCode(200, new BaseResponseDto<ResponseNotificationTypeDto>(NotificationTypeMapper.FromModelToDto(data)));
+    }
 
 
 
     [HttpDelete("/v1/notification-types/{id:int}")]
-    public async Task<IActionResult> Delete([FromRoute] int id) { return null; }
+    public async Task<IActionResult> Delete([FromRoute] int id)
+    {
+        var data = await _context.NotificationTypes.Where(x => x.Id == id).FirstOrDefaultAsync();
+
+        if (data == null)
+        {
+            return StatusCode(400);
+        }
+
+        _context.NotificationTypes.Remove(data);
+        _context.SaveChangesAsync();
+        return StatusCode(200, new BaseResponseDto<ResponseNotificationTypeDto>());
+
+    }
 
 }
