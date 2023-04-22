@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProjectsManagement.Data;
 using ProjectsManagement.Models;
 
 namespace ProjectsManagement.Controllers;
@@ -8,10 +9,19 @@ namespace ProjectsManagement.Controllers;
 [Authorize]
 public class PermissionController : ControllerBase
 {
+    private readonly ProjectsManagementContext _context;
+
+    public PermissionController(ProjectsManagementContext context)
+    {
+        _context = context;
+    }
 
     [AllowAnonymous]
     [HttpGet("/v1/permissions")]
-    public async Task<IActionResult> Get() { return null; }
+    public async Task<IActionResult> Get()
+    {
+        return null;
+    }
 
 
     [HttpGet("/v1/permissions/{id:int}")]
