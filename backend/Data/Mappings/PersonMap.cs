@@ -14,8 +14,7 @@ public class PersonMap : BaseEntityConfiguration<Person>
         builder.Property(x => x.PasswordHash).IsRequired().HasColumnName("PasswordHash");
         builder.Property(x => x.DateOfBirth).IsRequired().HasColumnName("DateOfBirth");
         builder.Property(x => x.ProfileImage).IsRequired().HasColumnName("ProfileImage");
-        builder.HasOne(x => x.Role);
-        builder.HasOne(x => x.Address);
+        builder.HasMany(x => x.Addresses);
         builder.HasMany(x => x.Contacts);
 
 

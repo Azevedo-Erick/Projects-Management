@@ -16,7 +16,6 @@ public class ProjectMap : BaseEntityConfiguration<Project>
         builder.HasOne(x => x.Manager);
         builder.HasMany(x => x.Squads);
         builder.HasMany(x => x.Milestones);
-        builder.HasMany(x => x.Tasks);
-
+        builder.HasMany(x => x.Issues).WithOne(x => x.Project).OnDelete(DeleteBehavior.Cascade);
     }
 }

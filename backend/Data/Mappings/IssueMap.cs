@@ -12,8 +12,8 @@ public class IssueMap : BaseEntityConfiguration<Issue>
         builder.Property(x => x.Title).IsRequired().HasColumnName("Title").HasMaxLength(255);
         builder.Property(x => x.Text).IsRequired().HasColumnName("Text");
         builder.HasOne(x => x.Author);
-        builder.HasOne(x => x.Task);
-
+        builder.HasOne(x => x.Project).WithMany(p => p.Issues).HasForeignKey(x => x.ProjectId)
+               .OnDelete(DeleteBehavior.Restrict);
 
     }
 }
