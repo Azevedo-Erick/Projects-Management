@@ -7,7 +7,7 @@ public class Task : BaseEntity
     public string Description { get; set; }
 
     public Person Assigner { get; set; }
-    public List<Employee> AssignedTo { get; set; }
+    public List<TaskAssignment> Assignments { get; set; }
     public List<Tag> Tags { get; set; }
     public List<Issue> Issues { get; set; }
     public DateTime StartDate { get; set; }
