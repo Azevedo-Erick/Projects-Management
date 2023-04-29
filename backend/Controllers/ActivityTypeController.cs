@@ -19,7 +19,7 @@ public class ActivityTypeController : ControllerBase
 
     private readonly ProjectsManagementContext _context;
 
-    ActivityTypeController(ProjectsManagementContext context)
+    public ActivityTypeController(ProjectsManagementContext context)
     {
         _context = context;
     }
@@ -36,7 +36,7 @@ public class ActivityTypeController : ControllerBase
     [HttpGet("/v1/activities-types/{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        var data = await _context.ActivityTypes.Where(x=>x.Id == id).AsNoTracking().FirstOrDefaultAsync();
+        var data = await _context.ActivityTypes.Where(x => x.Id == id).AsNoTracking().FirstOrDefaultAsync();
         if (data == null)
         {
             return StatusCode(400);
@@ -71,7 +71,7 @@ public class ActivityTypeController : ControllerBase
         }
 
 
-        var data = await _context.ActivityTypes.Where(x=>x.Id == id).FirstOrDefaultAsync();
+        var data = await _context.ActivityTypes.Where(x => x.Id == id).FirstOrDefaultAsync();
         if (data == null)
         {
             return StatusCode(400);
@@ -82,7 +82,7 @@ public class ActivityTypeController : ControllerBase
         {
             data.Name = serializedData.Name;
         }
-        
+
         _context.ActivityTypes.Update(data);
         await _context.SaveChangesAsync();
         return StatusCode(200, new BaseResponseDto<ResponseActivityTypeDto>(ActivityTypeMapper.FromModelToDto(data)));
@@ -93,7 +93,7 @@ public class ActivityTypeController : ControllerBase
     [HttpDelete("/v1/activities-types/{id:int}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        var data = await _context.ActivityTypes.Where(x=>x.Id == id).FirstOrDefaultAsync();
+        var data = await _context.ActivityTypes.Where(x => x.Id == id).FirstOrDefaultAsync();
         if (data == null)
         {
             return StatusCode(400);

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjectsManagement.Data;
 using ProjectsManagement.Dtos;
 using ProjectsManagement.Dtos.Person;
+using ProjectsManagement.Extensions;
 using ProjectsManagement.Mappers;
 using ProjectsManagement.Models;
 using ProjectsManagement.QueryParams;
@@ -12,7 +13,7 @@ using ProjectsManagement.QueryParams;
 namespace ProjectsManagement.Controllers;
 
 [ApiController]
-[Authorize]
+//[Authorize]
 public class PersonController : ControllerBase
 {
 
@@ -50,7 +51,7 @@ public class PersonController : ControllerBase
     {
         if (!ModelState.IsValid)
         {
-            return StatusCode(400);
+            return StatusCode(400, new BaseResponseDto<ResponsePersonDto>(ModelState.GetErrors()));
         }
 
         var data = PersonMapper.FromDtoToModel(dto);

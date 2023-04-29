@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using ProjectsManagement.Data;
 using ProjectsManagement.Dtos;
 using ProjectsManagement.Dtos.City;
+using ProjectsManagement.Extensions;
 using ProjectsManagement.Mappers;
 using ProjectsManagement.Models;
 using ProjectsManagement.QueryParams;
@@ -12,12 +13,12 @@ using ProjectsManagement.QueryParams;
 namespace ProjectsManagement.Controllers;
 
 [ApiController]
-[Authorize]
+//[Authorize]
 public class CityController : ControllerBase
 {
     private readonly ProjectsManagementContext _context;
 
-    CityController(ProjectsManagementContext context)
+    public CityController(ProjectsManagementContext context)
     {
         _context = context;
     }
@@ -71,11 +72,20 @@ public class CityController : ControllerBase
 
 
     [HttpPost("/v1/cities")]
-    public async Task<IActionResult> Post(CreateCityDto dto)
+    public async Task<IActionResult> Post([FromBody] CreateCityDto dto)
     {
-        if (!ModelState.IsValid) { }
+        if (!ModelState.IsValid)
+        {
+            return StatusCode(400, new BaseResponseDto<ResponseCityDto>(ModelState.GetErrors()));
+        }
+
         var data = CityMapper.FromDtoToModel(dto);
-        //data.State = ;
+        var state = _context.States.Where(x => x.Id == dto.StateId).Include(x => x.Country).FirstOrDefault();
+        if (state == null)
+        {
+            return StatusCode(400, new BaseResponseDto<ResponseCityDto>());
+        }
+        data.State = state;
         await _context.Cities.AddAsync(data);
         _context.SaveChanges();
 

@@ -12,13 +12,13 @@ using ProjectsManagement.Models;
 namespace ProjectsManagement.Controllers;
 
 [ApiController]
-[Authorize]
+//[Authorize]
 public class StateController : ControllerBase
 {
 
     private readonly ProjectsManagementContext _context;
 
-    StateController(ProjectsManagementContext context)
+    public StateController(ProjectsManagementContext context)
     {
         _context = context;
     }

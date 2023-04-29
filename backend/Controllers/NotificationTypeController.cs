@@ -29,14 +29,14 @@ public class NotificationTypeController : ControllerBase
     public async Task<IActionResult> Get([FromQuery] NotificationTypeQueryParams queryParams)
     {
         var data = await _context.NotificationTypes.AsQueryable().Apply(queryParams).AsNoTracking().ToListAsync();
-        return StatusCode(200, new BaseResponseDto<ResponseNotificationTypeDto>(data.Select(x=>NotificationTypeMapper.FromModelToDto(x)).ToList()));
+        return StatusCode(200, new BaseResponseDto<ResponseNotificationTypeDto>(data.Select(x => NotificationTypeMapper.FromModelToDto(x)).ToList()));
     }
 
 
     [HttpGet("/v1/notification-types/{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        var data = await _context.NotificationTypes.Where(x=>x.Id == id).AsNoTracking().FirstOrDefaultAsync();
+        var data = await _context.NotificationTypes.Where(x => x.Id == id).AsNoTracking().FirstOrDefaultAsync();
         if (data == null)
         {
             return StatusCode(400);
@@ -47,6 +47,7 @@ public class NotificationTypeController : ControllerBase
 
 
     [HttpPost("/v1/notification-types")]
+    [AllowAnonymous]
     public async Task<IActionResult> Post(CreateNotificationTypeDto dto)
     {
         if (!ModelState.IsValid) { }

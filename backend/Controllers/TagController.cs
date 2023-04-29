@@ -12,7 +12,7 @@ using ProjectsManagement.QueryParams;
 namespace ProjectsManagement.Controllers;
 
 [ApiController]
-[Authorize]
+//[Authorize]
 public class TagController : ControllerBase
 {
 

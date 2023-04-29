@@ -17,7 +17,7 @@ public class ActivityLogController : ControllerBase
 {
     private readonly ProjectsManagementContext _context;
 
-    ActivityLogController(ProjectsManagementContext context)
+    public ActivityLogController(ProjectsManagementContext context)
     {
         this._context = context;
     }
@@ -38,7 +38,7 @@ public class ActivityLogController : ControllerBase
         {
             return StatusCode(400);
         }
-        
+
         return StatusCode(200, new BaseResponseDto<ResponseActivityLogDto>(ActivityLogMapper.FromModelToDto(data)));
 
     }
@@ -60,7 +60,7 @@ public class ActivityLogController : ControllerBase
         {
             return StatusCode(400);
         }
-        
+
         var data = ActivityLogMapper.FromDtoToModel(dto);
         data.ActivityType = activityType;
         data.Person = person;
@@ -92,20 +92,20 @@ public class ActivityLogController : ControllerBase
         {
             var activityType =
                 await _context.ActivityTypes.Where(x => x.Id == dto.ActivityTypeId).FirstOrDefaultAsync();
-            
-            if(activityType == null)
+
+            if (activityType == null)
             {
                 return StatusCode(400);
             }
 
             data.ActivityType = activityType;
         }
-        
+
         if (dto.PersonId != data.PersonId)
         {
             Person? person = new Person();
-            
-            if(person == null)
+
+            if (person == null)
             {
                 return StatusCode(400);
             }
@@ -120,7 +120,7 @@ public class ActivityLogController : ControllerBase
 
         _context.ActivityLogs.Update(data);
         await _context.SaveChangesAsync();
-        
+
         return StatusCode(200, new BaseResponseDto<ResponseActivityLogDto>(ActivityLogMapper.FromModelToDto(data)));
 
 

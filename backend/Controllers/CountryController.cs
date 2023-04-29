@@ -5,19 +5,20 @@ using Microsoft.EntityFrameworkCore;
 using ProjectsManagement.Data;
 using ProjectsManagement.Dtos;
 using ProjectsManagement.Dtos.Country;
+using ProjectsManagement.Extensions;
 using ProjectsManagement.Mappers;
 using ProjectsManagement.Models;
 using ProjectsManagement.QueryParams;
 
 namespace ProjectsManagement.Controllers;
 
-[ApiController]
 [Authorize]
+[ApiController]
 public class CountryController : ControllerBase
-{ 
+{
     private readonly ProjectsManagementContext _context;
 
-    CountryController(ProjectsManagementContext context)
+    public CountryController(ProjectsManagementContext context)
     {
         _context = context;
     }
@@ -58,12 +59,17 @@ public class CountryController : ControllerBase
 
 
     [HttpPost("/v1/countries")]
+    [AllowAnonymous]
     public async Task<IActionResult> Post(CreateCountryDto dto)
     {
-        if (!ModelState.IsValid) { }
+        if (!ModelState.IsValid)
+        {
+
+            return StatusCode(400, new BaseResponseDto<ResponseCountryDto>(ModelState.GetErrors()));
+        }
 
         var data = CountryMapper.FromDtoToModel(dto);
-
+        Console.WriteLine(data.Name);
         await _context.Countries.AddAsync(data);
         _context.SaveChanges();
 
