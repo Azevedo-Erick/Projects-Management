@@ -1,6 +1,6 @@
 namespace ProjectsManagement.Dtos.ContactType;
 
-public class ResponseContactTypeDto
+public record ResponseContactTypeDto
 {
     public string Name { get; set; }
     public ResponseContactTypeDto()

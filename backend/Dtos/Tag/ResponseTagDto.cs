@@ -1,6 +1,6 @@
 namespace ProjectsManagement.Dtos.Tag;
 
-public class ResponseTagDto
+public record ResponseTagDto
 {
     public string Title { get; set; }
     public string HexColor { get; set; }

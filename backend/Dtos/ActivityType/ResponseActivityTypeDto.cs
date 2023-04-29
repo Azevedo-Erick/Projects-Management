@@ -1,6 +1,6 @@
 namespace ProjectsManagement.Dtos.ActivityType;
 
-public class ResponseActivityTypeDto
+public record ResponseActivityTypeDto
 {
     public string Name { get; set; }
 }

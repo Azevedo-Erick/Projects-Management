@@ -2,7 +2,7 @@ using ProjectsManagement.Dtos.Country;
 
 namespace ProjectsManagement.Dtos.State;
 
-public class ResponseStateDto
+public record ResponseStateDto
 {
     public string Name { get; set; }
     public ResponseCountryDto Country { get; set; }

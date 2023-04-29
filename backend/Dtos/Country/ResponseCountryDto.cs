@@ -1,6 +1,6 @@
 namespace ProjectsManagement.Dtos.Country
 {
-    public class ResponseCountryDto
+    public record ResponseCountryDto
     {
         private object value;
 

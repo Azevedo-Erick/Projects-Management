@@ -1,6 +1,6 @@
 namespace ProjectsManagement.Dtos.Permission;
 
-public class ResponsePermissionDto
+public record ResponsePermissionDto
 {
 
     public string Name { get; set; }

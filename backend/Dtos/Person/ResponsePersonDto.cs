@@ -1,10 +1,10 @@
 using ProjectsManagement.Dtos.ContactInfo;
 
-namespace  ProjectsManagement.Dtos.Person;
+namespace ProjectsManagement.Dtos.Person;
 
-public class ResponsePersonDto
+public record ResponsePersonDto
 {
-     public string Name { get; set; }
+    public string Name { get; set; }
     public string Email { get; set; }
     public DateTime DateOfBirth { get; set; }
 

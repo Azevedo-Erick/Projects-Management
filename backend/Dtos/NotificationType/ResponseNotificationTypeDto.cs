@@ -1,6 +1,6 @@
 namespace ProjectsManagement.Dtos.NotificationType;
 
-public class ResponseNotificationTypeDto
+public record ResponseNotificationTypeDto
 {
     public string Name { get; set; }
 

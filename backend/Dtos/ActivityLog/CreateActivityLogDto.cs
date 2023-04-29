@@ -1,6 +1,6 @@
 namespace ProjectsManagement.Dtos.ActivityLog;
 
-public class CreateActivityLogDto
+public record CreateActivityLogDto
 {
     public DateTime Timestamp { get; set; }
     public string Description { get; set; }

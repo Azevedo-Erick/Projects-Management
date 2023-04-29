@@ -1,7 +1,7 @@
 using ProjectsManagement.Dtos.Permission;
 
 namespace ProjectsManagement.Dtos.Role;
-public class ResponseRoleDto
+public record ResponseRoleDto
 {
     public string Name { get; set; }
     public List<ResponsePermissionDto> Permissions { get; set; }
