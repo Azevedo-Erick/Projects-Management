@@ -27,45 +27,69 @@ public class CityController : ControllerBase
     [HttpGet("/v1/cities")]
     public async Task<IActionResult> Get([FromQuery] CityQueryParams queryParams)
     {
-        var data = await _context.Cities.AsQueryable().Apply(queryParams)
-                .Include(x => x.State)
-                    .ThenInclude(x => x.Country)
-                .AsNoTracking()
-                .ToListAsync();
+        try
+        {
+            var data = await _context.Cities.AsQueryable().Apply(queryParams)
+                    .Include(x => x.State)
+                        .ThenInclude(x => x.Country)
+                    .AsNoTracking()
+                    .ToListAsync();
 
-        return StatusCode(
-            200,
-            new BaseResponseDto<ResponseCityDto>(
-                data.Select(
-                        x => CityMapper.FromModelToDto(x)
-                    ).ToList()
-                )
-            );
+            return StatusCode(
+                200,
+                new BaseResponseDto<ResponseCityDto>(
+                    data.Select(
+                            x => CityMapper.FromModelToDto(x)
+                        ).ToList()
+                    )
+                );
+        }
+        catch (Exception e)
+        {
 
+            Console.WriteLine(e);
+            return StatusCode(
+                500, new BaseResponseDto<ResponseCityDto>(e.Message));
+        }
     }
 
 
     [HttpGet("/v1/cities/{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        var data = await _context.Cities.Where(x => x.Id == id)
-                    .Include(x => x.State)
-                    .ThenInclude(x => x.Country)
-                .AsNoTracking()
-                .FirstOrDefaultAsync();
-
-        if (data == null)
+        try
         {
-            return StatusCode(
-            400);
-        }
 
-        return StatusCode(
-            200,
-            new BaseResponseDto<ResponseCityDto>(
-                    CityMapper.FromModelToDto(data)
-                )
-            );
+
+            var data = await _context.Cities.Where(x => x.Id == id)
+                        .Include(x => x.State)
+                        .ThenInclude(x => x.Country)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
+
+            if (data == null)
+            {
+                return StatusCode(
+                400, new BaseResponseDto<ResponseCityDto>(
+                      "Não encontrado"
+                    )
+                );
+            }
+
+            return StatusCode(
+                200,
+                new BaseResponseDto<ResponseCityDto>(
+                        CityMapper.FromModelToDto(data)
+                    )
+                );
+        }
+        catch (Exception e)
+        {
+
+            Console.WriteLine(e);
+            return StatusCode(
+                500, new BaseResponseDto<ResponseCityDto>(e.Message));
+        }
 
     }
 
@@ -74,27 +98,40 @@ public class CityController : ControllerBase
     [HttpPost("/v1/cities")]
     public async Task<IActionResult> Post([FromBody] CreateCityDto dto)
     {
-        if (!ModelState.IsValid)
+        try
         {
-            return StatusCode(400, new BaseResponseDto<ResponseCityDto>(ModelState.GetErrors()));
-        }
 
-        var data = CityMapper.FromDtoToModel(dto);
-        var state = _context.States.Where(x => x.Id == dto.StateId).Include(x => x.Country).FirstOrDefault();
-        if (state == null)
+
+            if (!ModelState.IsValid)
+            {
+                return StatusCode(400, new BaseResponseDto<ResponseCityDto>(ModelState.GetErrors()));
+            }
+
+            var data = CityMapper.FromDtoToModel(dto);
+            var state = _context.States.Where(x => x.Id == dto.StateId).Include(x => x.Country).FirstOrDefault();
+
+            if (state == null)
+            {
+                return StatusCode(400, new BaseResponseDto<ResponseCityDto>("Estado não encontrado"));
+            }
+
+            data.State = state;
+            await _context.Cities.AddAsync(data);
+            _context.SaveChanges();
+
+            return StatusCode(
+               200,
+               new BaseResponseDto<ResponseCityDto>(
+                       CityMapper.FromModelToDto(data)
+                   )
+               );
+        }
+        catch (Exception e)
         {
-            return StatusCode(400, new BaseResponseDto<ResponseCityDto>());
+            Console.WriteLine(e);
+            return StatusCode(
+                500, new BaseResponseDto<ResponseCityDto>(e.Message));
         }
-        data.State = state;
-        await _context.Cities.AddAsync(data);
-        _context.SaveChanges();
-
-        return StatusCode(
-           200,
-           new BaseResponseDto<ResponseCityDto>(
-                   CityMapper.FromModelToDto(data)
-               )
-           );
     }
 
 
@@ -102,26 +139,47 @@ public class CityController : ControllerBase
     [HttpPatch("/v1/cities/{id:int}")]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] CreateCityDto dto)
     {
-        if (!ModelState.IsValid) { }
-        var element = await _context.Cities.Where(x => x.Id == id).FirstOrDefaultAsync();
-
-        if (element == null)
+        try
         {
+            Console.WriteLine(dto);
+            if (!ModelState.IsValid) { }
+            var element = await _context.Cities.Where(x => x.Id == id).Include(x => x.State).ThenInclude(x => x.Country).FirstOrDefaultAsync();
+
+            if (element == null)
+            {
+                return StatusCode(
+                400, new BaseResponseDto<ResponseCityDto>("Elemento não encontrado"));
+            }
+            var data = CityMapper.FromDtoToModel(dto);
+            element.Name = data.Name;
+            if (element.StateId != data.StateId)
+            {
+                var state = await _context.States.Where(x => x.Id == data.StateId).FirstOrDefaultAsync();
+                if (state == null)
+                {
+                    return StatusCode(
+                    400, "Estado não encontrado");
+                }
+                element.StateId = state.Id;
+            }
+
+            _context.Cities.Update(element);
+            _context.SaveChanges();
+
             return StatusCode(
-            400);
+               200,
+               new BaseResponseDto<ResponseCityDto>(
+                       CityMapper.FromModelToDto(element)
+                   )
+               );
         }
-        var data = CityMapper.FromDtoToModel(dto);
-        element.Name = data.Name;
-        element.State = data.State;
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(
+                500, new BaseResponseDto<ResponseCityDto>(e.Message));
+        }
 
-        _context.SaveChanges();
-
-        return StatusCode(
-           200,
-           new BaseResponseDto<ResponseCityDto>(
-                   CityMapper.FromModelToDto(element)
-               )
-           );
     }
 
 
@@ -129,18 +187,29 @@ public class CityController : ControllerBase
     [HttpDelete("/v1/cities/{id:int}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        var element = await _context.Cities.Where(x => x.Id == id).FirstOrDefaultAsync();
-
-        if (element == null)
+        try
         {
+            var element = await _context.Cities.Where(x => x.Id == id).FirstOrDefaultAsync();
+
+            if (element == null)
+            {
+                return StatusCode(
+                400, new BaseResponseDto<ResponseCityDto>("Elemento não encontrado"));
+            }
+            _context.Cities.Remove(element);
+            _context.SaveChanges();
+
             return StatusCode(
-            400);
+               200,
+               new BaseResponseDto<ResponseCityDto>()
+               );
         }
-        _context.Cities.Remove(element);
-        return StatusCode(
-           200,
-           new BaseResponseDto<ResponseCityDto>()
-           );
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return StatusCode(
+                500, new BaseResponseDto<ResponseCityDto>(e.Message));
+        }
     }
 
 }

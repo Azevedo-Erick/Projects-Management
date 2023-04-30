@@ -27,20 +27,42 @@ public class TagController : ControllerBase
     [HttpGet("/v1/tags")]
     public async Task<IActionResult> Get([FromQuery] TagQueryParams queryParams)
     {
-        var data = await _context.Tags.AsQueryable().Apply(queryParams).ToListAsync();
-        return StatusCode(200, new BaseResponseDto<ResponseTagDto>(data.Select(TagMapper.FromModelToDto).ToList()));
+        try
+        {
+
+            var data = await _context.Tags.AsQueryable().Apply(queryParams).ToListAsync();
+            return StatusCode(200, new BaseResponseDto<ResponseTagDto>(data.Select(TagMapper.FromModelToDto).ToList()));
+        }
+        catch (Exception e)
+        {
+
+            Console.WriteLine(e);
+            return StatusCode(
+                500, new BaseResponseDto<ResponseTagDto>(e.Message));
+        }
     }
 
 
     [HttpGet("/v1/tags/{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        var data = await _context.Tags.Where(x => x.Id == id).FirstOrDefaultAsync();
-        if (data == null)
+        try
         {
-            return StatusCode(400, new BaseResponseDto<ResponseTagDto>());
+
+            var data = await _context.Tags.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (data == null)
+            {
+                return StatusCode(400, new BaseResponseDto<ResponseTagDto>("Elemento não encontrado"));
+            }
+            return StatusCode(200, new BaseResponseDto<ResponseTagDto>(TagMapper.FromModelToDto(data)));
         }
-        return StatusCode(200, new BaseResponseDto<ResponseTagDto>(TagMapper.FromModelToDto(data)));
+        catch (Exception e)
+        {
+
+            Console.WriteLine(e);
+            return StatusCode(
+                500, new BaseResponseDto<ResponseTagDto>(e.Message));
+        }
     }
 
 
@@ -48,17 +70,28 @@ public class TagController : ControllerBase
     [HttpPost("/v1/tags")]
     public async Task<IActionResult> Post(CreateTagDto dto)
     {
-        if (!ModelState.IsValid) { }
-        var data = TagMapper.FromDtoToModel(dto);
-        await _context.Tags.AddAsync(data);
-        _context.SaveChanges();
+        try
+        {
 
-        return StatusCode(
-           200,
-           new BaseResponseDto<ResponseTagDto>(
-                   TagMapper.FromModelToDto(data)
-               )
-           );
+            if (!ModelState.IsValid) { }
+            var data = TagMapper.FromDtoToModel(dto);
+            await _context.Tags.AddAsync(data);
+            _context.SaveChanges();
+
+            return StatusCode(
+               200,
+               new BaseResponseDto<ResponseTagDto>(
+                       TagMapper.FromModelToDto(data)
+                   )
+               );
+        }
+        catch (Exception e)
+        {
+
+            Console.WriteLine(e);
+            return StatusCode(
+                500, new BaseResponseDto<ResponseTagDto>(e.Message));
+        }
     }
 
 
@@ -66,38 +99,47 @@ public class TagController : ControllerBase
     [HttpPatch("/v1/tags/{id:int}")]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] CreateTagDto dto)
     {
-        if (!ModelState.IsValid) { }
-
-        var data = await _context.Tags.Where(x => x.Id == id).FirstOrDefaultAsync();
-
-        if (data == null)
+        try
         {
+
+            if (!ModelState.IsValid) { }
+
+            var data = await _context.Tags.Where(x => x.Id == id).FirstOrDefaultAsync();
+
+            if (data == null)
+            {
+                return StatusCode(400, new BaseResponseDto<ResponseTagDto>("Elemento não encontrado"));
+
+            }
+
+            var serializedData = TagMapper.FromDtoToModel(dto);
+
+            if (data.Title != serializedData.Title)
+            {
+                data.Title = serializedData.Title;
+            }
+            if (data.HexColor != serializedData.HexColor)
+            {
+                data.HexColor = serializedData.HexColor;
+
+            }
+            _context.Tags.Update(data);
+            _context.SaveChanges();
+
             return StatusCode(
-                400,
-           new BaseResponseDto<ResponseTagDto>()
-            );
+               200,
+               new BaseResponseDto<ResponseTagDto>(
+                       TagMapper.FromModelToDto(data)
+                   )
+               );
         }
-
-        var serializedData = TagMapper.FromDtoToModel(dto);
-
-        if (data.Title != serializedData.Title)
+        catch (Exception e)
         {
-            data.Title = serializedData.Title;
-        }
-        if (data.HexColor != serializedData.HexColor)
-        {
-            data.HexColor = serializedData.HexColor;
 
+            Console.WriteLine(e);
+            return StatusCode(
+                500, new BaseResponseDto<ResponseTagDto>(e.Message));
         }
-        _context.Tags.Update(data);
-        _context.SaveChanges();
-
-        return StatusCode(
-           200,
-           new BaseResponseDto<ResponseTagDto>(
-                   TagMapper.FromModelToDto(data)
-               )
-           );
     }
 
 
@@ -105,24 +147,33 @@ public class TagController : ControllerBase
     [HttpDelete("/v1/tags/{id:int}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        var data = await _context.Tags.Where(x => x.Id == id).FirstOrDefaultAsync();
-
-        if (data == null)
+        try
         {
+            var data = await _context.Tags.Where(x => x.Id == id).FirstOrDefaultAsync();
+
+            if (data == null)
+            {
+                return StatusCode(400, new BaseResponseDto<ResponseTagDto>("Elemento não encontrado"));
+
+            }
+
+            _context.Tags.Remove(data);
+            _context.SaveChanges();
+
             return StatusCode(
-                400,
-           new BaseResponseDto<ResponseTagDto>()
-            );
+              200,
+              new BaseResponseDto<ResponseTagDto>(
+                  )
+              );
+
         }
+        catch (Exception e)
+        {
 
-        _context.Tags.Remove(data);
-        _context.SaveChanges();
-
-        return StatusCode(
-          200,
-          new BaseResponseDto<ResponseTagDto>(
-              )
-          );
+            Console.WriteLine(e);
+            return StatusCode(
+                500, new BaseResponseDto<ResponseTagDto>(e.Message));
+        }
     }
 
 }

@@ -27,38 +27,61 @@ public class StateController : ControllerBase
     [HttpGet("/v1/states")]
     public async Task<IActionResult> Get([FromQuery] StateQueryParams queryParams)
     {
-        var data = await _context.States.AsQueryable().Apply(queryParams)
-            .Include(x => x.Country).AsNoTracking().ToListAsync();
+        try
+        {
+            var data = await _context.States.AsQueryable().Apply(queryParams)
+                .Include(x => x.Country).AsNoTracking().ToListAsync();
 
-        return StatusCode(
-            200,
-            new BaseResponseDto<ResponseStateDto>(
-                data.Select(
-                        x => StateMapper.FromModelToDto(x)
-                    ).ToList()
-                )
-            );
+            return StatusCode(
+                200,
+                new BaseResponseDto<ResponseStateDto>(
+                    data.Select(
+                            x => StateMapper.FromModelToDto(x)
+                        ).ToList()
+                    )
+                );
+        }
+        catch (Exception e)
+        {
+
+            Console.WriteLine(e);
+            return StatusCode(
+                500, new BaseResponseDto<ResponseCountryDto>(e.Message));
+        }
     }
 
 
     [HttpGet("/v1/states/{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        var data = await _context.States.Where(x => x.Id == id)
-        .Include(x => x.Country)
-        .AsNoTracking()
-        .FirstOrDefaultAsync();
-        if (data == null)
+        try
         {
+            var data = await _context.States.Where(x => x.Id == id)
+            .Include(x => x.Country)
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+            if (data == null)
+            {
+                return StatusCode(
+                            400,
+                           new BaseResponseDto<ResponseStateDto>(
+                                  "Elemento não encontrado"
+                               ));
+            }
             return StatusCode(
-            400);
+               200,
+               new BaseResponseDto<ResponseStateDto>(
+                       StateMapper.FromModelToDto(data)
+                   )
+               );
         }
-        return StatusCode(
-           200,
-           new BaseResponseDto<ResponseStateDto>(
-                   StateMapper.FromModelToDto(data)
-               )
-           );
+        catch (Exception e)
+        {
+
+            Console.WriteLine(e);
+            return StatusCode(
+                500, new BaseResponseDto<ResponseCountryDto>(e.Message));
+        }
     }
 
 
@@ -66,18 +89,39 @@ public class StateController : ControllerBase
     [HttpPost("/v1/states")]
     public async Task<IActionResult> Post(CreateStateDto dto)
     {
-        if (!ModelState.IsValid) { }
-        var data = StateMapper.FromDtoToModel(dto);
-        //data.State = ;
-        await _context.States.AddAsync(data);
-        _context.SaveChanges();
+        try
+        {
+            if (!ModelState.IsValid) { }
+            var data = StateMapper.FromDtoToModel(dto);
 
-        return StatusCode(
-           200,
-           new BaseResponseDto<ResponseStateDto>(
-                   StateMapper.FromModelToDto(data)
-               )
-           );
+            var country = await _context.Countries.Where(x => x.Id == dto.CountryId).FirstOrDefaultAsync();
+            if (country == null)
+            {
+                return StatusCode(
+                           400,
+                          new BaseResponseDto<ResponseStateDto>(
+                                 "Elemento não encontrado"
+                              ));
+            }
+            data.CountryId = country.Id;
+
+            await _context.States.AddAsync(data);
+            _context.SaveChanges();
+
+            return StatusCode(
+               200,
+               new BaseResponseDto<ResponseStateDto>(
+                       StateMapper.FromModelToDto(data)
+                   )
+               );
+        }
+        catch (Exception e)
+        {
+
+            Console.WriteLine(e);
+            return StatusCode(
+                500, new BaseResponseDto<ResponseCountryDto>(e.Message));
+        }
 
     }
 
@@ -86,26 +130,44 @@ public class StateController : ControllerBase
     [HttpPatch("/v1/states/{id:int}")]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] CreateStateDto dto)
     {
-        if (!ModelState.IsValid) { }
-        var element = await _context.States.Where(x => x.Id == id).FirstOrDefaultAsync();
-
-        if (element == null)
+        try
         {
+            if (!ModelState.IsValid) { }
+            var element = await _context.States.Where(x => x.Id == id).Include(x => x.Country).FirstOrDefaultAsync();
+            if (element == null)
+            {
+                return StatusCode(
+                400);
+            }
+            var data = StateMapper.FromDtoToModel(dto);
+            element.Name = data.Name;
+            if (element.CountryId != data.CountryId)
+            {
+                var country = await _context.Countries.Where(x => x.Id == data.CountryId).FirstOrDefaultAsync();
+                if (country == null)
+                {
+                    return StatusCode(
+               400, "País não encontrado");
+                }
+                element.CountryId = country.Id;
+            }
+            _context.States.Update(element);
+            _context.SaveChanges();
+
             return StatusCode(
-            400);
+               200,
+               new BaseResponseDto<ResponseStateDto>(
+                       StateMapper.FromModelToDto(element)
+                   )
+               );
         }
-        var data = StateMapper.FromDtoToModel(dto);
-        element.Name = data.Name;
-        element.Country = data.Country;
+        catch (Exception e)
+        {
 
-        _context.SaveChanges();
-
-        return StatusCode(
-           200,
-           new BaseResponseDto<ResponseStateDto>(
-                   StateMapper.FromModelToDto(element)
-               )
-           );
+            Console.WriteLine(e);
+            return StatusCode(
+                500, new BaseResponseDto<ResponseCountryDto>(e.Message));
+        }
 
     }
 
@@ -114,18 +176,30 @@ public class StateController : ControllerBase
     [HttpDelete("/v1/states/{id:int}")]
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        var element = await _context.Countries.Where(x => x.Id == id).FirstOrDefaultAsync();
-
-        if (element == null)
+        try
         {
+            var element = await _context.States.Where(x => x.Id == id).FirstOrDefaultAsync();
+
+            if (element == null)
+            {
+                return StatusCode(
+                400, "Estado não encontrado ");
+            }
+            _context.States.Remove(element);
+            _context.SaveChanges();
+
             return StatusCode(
-            400);
+               200,
+               new BaseResponseDto<ResponseStateDto>()
+               );
         }
-        _context.Countries.Remove(element);
-        return StatusCode(
-           200,
-           new BaseResponseDto<ResponseStateDto>()
-           );
+        catch (Exception e)
+        {
+
+            Console.WriteLine(e);
+            return StatusCode(
+                500, new BaseResponseDto<ResponseCountryDto>(e.Message));
+        }
 
     }
 
