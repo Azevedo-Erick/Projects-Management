@@ -9,7 +9,12 @@ public static class CityMapper
 {
     public static ResponseCityDto FromModelToDto(City model)
     {
-        return new ResponseCityDto(model.Name, StateMapper.FromModelToDto(model.State));
+        return new ResponseCityDto
+        {
+            Id = model.Id,
+            Name = model.Name,
+            State = StateMapper.FromModelToDto(model.State)
+        };
     }
     public static City FromDtoToModel(CreateCityDto dto)
     {

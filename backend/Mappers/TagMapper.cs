@@ -7,10 +7,19 @@ public class TagMapper
 {
     public static ResponseTagDto FromModelToDto(Tag model)
     {
-        return new ResponseTagDto();
+        return new ResponseTagDto
+        {
+            Id = model.Id,
+            HexColor = model.HexColor,
+            Title = model.Title
+        };
     }
     public static Tag FromDtoToModel(CreateTagDto dto)
     {
-        return new Tag();
+        return new Tag
+        {
+            HexColor = dto.HexColor,
+            Title = dto.Title
+        };
     }
 }

@@ -8,11 +8,20 @@ public static class StateMapper
 {
     public static ResponseStateDto FromModelToDto(State model)
     {
-        return new ResponseStateDto(model.Name, CountryMapper.FromModelToDto(model.Country));
+        return new ResponseStateDto
+        {
+            Id = model.Id,
+            Name = model.Name,
+            Country = CountryMapper.FromModelToDto(model.Country)
+        };
     }
     public static State FromDtoToModel(CreateStateDto dto)
     {
-        return new State(dto.Name, dto.CountryId);
+        return new State
+        {
+            Name = dto.Name,
+            CountryId = dto.CountryId
+        };
     }
 
 
