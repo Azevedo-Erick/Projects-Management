@@ -21,8 +21,8 @@ public record CreatePersonDto
 
     [Display(Name = "DateOfBirth")]
     [Required(ErrorMessage = "O {0} é necessário")]
-    [DataType(DataType.Date, ErrorMessage = "O {0} deve ser uma data válida.")]
-    public DateOnly DateOfBirth { get; set; }
+    [DataType(DataType.DateTime, ErrorMessage = "O {0} deve ser uma data válida.")]
+    public DateTime DateOfBirth { get; set; }
 
     [Display(Name = "ProfileImage")]
     [Required(ErrorMessage = "O {0} é necessário")]

@@ -4,12 +4,9 @@ namespace ProjectsManagement.Dtos.State;
 
 public record ResponseStateDto
 {
+    public int Id { get; set; }
     public string Name { get; set; }
     public ResponseCountryDto Country { get; set; }
 
-    public ResponseStateDto(string name, ResponseCountryDto country)
-    {
-        Name = name;
-        Country = country;
-    }
+
 }
