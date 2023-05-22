@@ -12,11 +12,7 @@ public class PersonQueryParams : ICustomQueryable
     [QueryOperator(Operator = WhereOperator.Contains)]
 
     public string? Email { get; set; }
-    [QueryOperator(Operator = WhereOperator.Equals)]
 
-    public DateOnly DateOfBirth { get; set; }
-
-    public string? ProfileImage { get; set; }
     public PersonQueryParams()
     {
         // constructor logic here

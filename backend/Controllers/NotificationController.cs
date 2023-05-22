@@ -13,7 +13,7 @@ using ProjectsManagement.QueryParams;
 namespace ProjectsManagement.Controllers;
 
 [ApiController]
-[Authorize]
+//[Authorize]
 public class NotificationController : ControllerBase
 {
     private readonly ProjectsManagementContext _context;
@@ -27,7 +27,7 @@ public class NotificationController : ControllerBase
     [HttpGet("/v1/notifications")]
     public async Task<IActionResult> Get([FromQuery] NotificationQueryParams queryParams)
     {
-        var data = await _context.Notifications.AsQueryable().Apply(queryParams).AsNoTracking().ToListAsync();
+        var data = await _context.Notifications.AsQueryable().Apply(queryParams).Include(x => x.Recipient).Include(x => x.Type).AsNoTracking().ToListAsync();
         return StatusCode(200, new BaseResponseDto<ResponseNotificationDto>(data.Select(NotificationMapper.FromModelToDto).ToList()));
     }
 
@@ -35,7 +35,7 @@ public class NotificationController : ControllerBase
     [HttpGet("/v1/notifications/{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-        var data = await _context.Notifications.Where(x=>x.Id == id).AsNoTracking().FirstOrDefaultAsync();
+        var data = await _context.Notifications.Where(x => x.Id == id).AsNoTracking().FirstOrDefaultAsync();
         if (data == null)
         {
             return StatusCode(400);
@@ -58,13 +58,13 @@ public class NotificationController : ControllerBase
         var type = await _context.NotificationTypes.Where(x => x.Id == data.TypeId).FirstOrDefaultAsync();
         if (type == null)
         {
-            return StatusCode(400);
+            return StatusCode(400, new BaseResponseDto<ResponseNotificationDto>("O tipo informado não foi encontrado"));
         }
-        Person person=null;
+        var person = await _context.Persons.Where(x => x.Id == data.RecipientId).FirstOrDefaultAsync();
 
         if (person == null)
         {
-            return StatusCode(400);
+            return StatusCode(400, new BaseResponseDto<ResponseNotificationDto>("A pessoa informada não foi encontrada"));
         }
 
         data.Type = type;
@@ -92,9 +92,9 @@ public class NotificationController : ControllerBase
         {
             return StatusCode(400);
         }
-        
+
         var serializedData = NotificationMapper.FromDtoToModel(dto);
-        
+
         if (data.TypeId != serializedData.TypeId)
         {
             var type = await _context.NotificationTypes.Where(x => x.Id == serializedData.TypeId).FirstOrDefaultAsync();
@@ -107,7 +107,7 @@ public class NotificationController : ControllerBase
 
         if (data.RecipientId != serializedData.RecipientId)
         {
-            Person person=null;
+            Person person = null;
 
             if (person == null)
             {
@@ -126,11 +126,11 @@ public class NotificationController : ControllerBase
         {
             data.Message = serializedData.Message;
         }
-        
+
         _context.Notifications.Update(data);
         await _context.SaveChangesAsync();
         return StatusCode(200, new BaseResponseDto<ResponseNotificationDto>(NotificationMapper.FromModelToDto(data)));
-        
+
     }
 
 

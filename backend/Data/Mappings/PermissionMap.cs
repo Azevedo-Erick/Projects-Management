@@ -12,7 +12,6 @@ public class PermissionMap : BaseEntityConfiguration<Permission>
     {
 
         builder.Property(x => x.Name).IsRequired().HasColumnName("Name");
-        builder.Property(x => x.Has).IsRequired().HasColumnName("Has");
 
     }
 }

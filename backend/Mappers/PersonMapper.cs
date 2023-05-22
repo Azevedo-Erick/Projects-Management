@@ -7,11 +7,28 @@ namespace ProjectsManagement.Mappers
     {
         public static ResponsePersonDto FromModelToDto(Person model)
         {
-            return new ResponsePersonDto();
+            return new ResponsePersonDto
+            {
+                Addresses = new(),
+                Contacts = new(),
+                Email = model.Email,
+                Name = model.Name,
+                ProfileImage = "",
+                DateOfBirth = model.DateOfBirth
+            };
         }
         public static Person FromDtoToModel(CreatePersonDto dto)
         {
-            return new Person();
+            return new Person
+            {
+                Addresses = new(),
+                Contacts = new(),
+                Email = dto.Email,
+                Name = dto.Name,
+                PasswordHash = "",
+                ProfileImage = "",
+                DateOfBirth = dto.DateOfBirth
+            };
         }
         public PersonMapper()
         {

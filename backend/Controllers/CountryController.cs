@@ -119,8 +119,6 @@ public class CountryController : ControllerBase
         }
     }
 
-
-
     [HttpPatch("/v1/countries/{id:int}")]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] CreateCountryDto dto)
     {

@@ -38,10 +38,9 @@ public class CityController : ControllerBase
             return StatusCode(
                 200,
                 new BaseResponseDto<ResponseCityDto>(
-                    data.Select(
+                    data.ConvertAll(
                             x => CityMapper.FromModelToDto(x)
-                        ).ToList()
-                    )
+                        ))
                 );
         }
         catch (Exception e)
@@ -141,7 +140,6 @@ public class CityController : ControllerBase
     {
         try
         {
-            Console.WriteLine(dto);
             if (!ModelState.IsValid) { }
             var element = await _context.Cities.Where(x => x.Id == id).Include(x => x.State).ThenInclude(x => x.Country).FirstOrDefaultAsync();
 

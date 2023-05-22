@@ -32,7 +32,6 @@ public class PersonController : ControllerBase
         return StatusCode(200, new BaseResponseDto<ResponsePersonDto>(data.Select(PersonMapper.FromModelToDto).ToList()));
     }
 
-
     [HttpGet("/v1/persons/{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
@@ -44,8 +43,6 @@ public class PersonController : ControllerBase
         return StatusCode(200, new BaseResponseDto<ResponsePersonDto>(PersonMapper.FromModelToDto(data)));
     }
 
-
-
     [HttpPost("/v1/persons")]
     public async Task<IActionResult> Post(CreatePersonDto dto)
     {
@@ -55,28 +52,61 @@ public class PersonController : ControllerBase
         }
 
         var data = PersonMapper.FromDtoToModel(dto);
-
-        var addresses = await _context.Addresses.Where(x => dto.Addresses.Contains(x.Id)).ToListAsync();
-        var contacts = await _context.ContactInfos.Where(x => dto.Contacts.Contains(x.Id)).ToListAsync();
-
-        data.Contacts = contacts;
-        data.Addresses = addresses;
+        if (dto.Addresses != null)
+        {
+            data.Addresses = await _context.Addresses.Where(x => dto.Addresses.Contains(x.Id)).ToListAsync();
+        }
+        if (dto.Contacts != null)
+        {
+            data.Contacts = await _context.ContactInfos.Where(x => dto.Contacts.Contains(x.Id)).ToListAsync();
+        }
 
         _context.Persons.Add(data);
         _context.SaveChanges();
 
         return StatusCode(200, new BaseResponseDto<ResponsePersonDto>(PersonMapper.FromModelToDto(data)));
-
     }
 
-
-
     [HttpPatch("/v1/persons/{id:int}")]
-    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] Person dto) { return null; }
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] CreatePersonDto dto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return StatusCode(400, new BaseResponseDto<ResponsePersonDto>(ModelState.GetErrors()));
+        }
+        var model = await _context.Persons.Where(x => x.Id == id).Include(x => x.Addresses).Include(x => x.Contacts).FirstOrDefaultAsync();
+        if (model == null)
+        {
+            return StatusCode(400, new BaseResponseDto<ResponsePersonDto>(ModelState.GetErrors()));
+        }
+        var data = PersonMapper.FromDtoToModel(dto);
+        if (dto.Addresses != null)
+        {
+            model.Addresses = await _context.Addresses.Where(x => dto.Addresses.Contains(x.Id)).ToListAsync();
+        }
+        if (dto.Contacts != null)
+        {
+            model.Contacts = await _context.ContactInfos.Where(x => dto.Contacts.Contains(x.Id)).ToListAsync();
+        }
 
+        _context.Persons.Add(data);
+        _context.SaveChanges();
 
+        return StatusCode(200, new BaseResponseDto<ResponsePersonDto>(PersonMapper.FromModelToDto(data)));
+    }
 
     [HttpDelete("/v1/persons/{id:int}")]
-    public async Task<IActionResult> Delete([FromRoute] int id) { return null; }
-
+    public async Task<IActionResult> Delete([FromRoute] int id)
+    {
+        var model = await _context.Persons.Where(x => x.Id == id).Include(x => x.Addresses).Include(x => x.Contacts).FirstOrDefaultAsync();
+        if (model == null)
+        {
+            return StatusCode(400, new BaseResponseDto<ResponsePersonDto>(ModelState.GetErrors()));
+        }
+        _context.Addresses.RemoveRange(model.Addresses);
+        _context.ContactInfos.RemoveRange(model.Contacts);
+        _context.Persons.RemoveRange(model);
+        _context.SaveChanges();
+        return StatusCode(200, new BaseResponseDto<ResponsePersonDto>());
+    }
 }

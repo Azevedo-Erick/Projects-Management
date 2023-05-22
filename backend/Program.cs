@@ -1,12 +1,18 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using ProjectsManagement.Data;
+using ProjectsManagement.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 var key = Encoding.ASCII.GetBytes(Configuration.JwtKey);
+
+
+
 builder.Services.AddAuthentication(x =>
     {
         x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -24,11 +30,19 @@ builder.Services.AddAuthentication(x =>
 });
 
 
-builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.SuppressMapClientErrors = true;
+    });
+
 builder.Services.AddDbContext<ProjectsManagementContext>();
+builder.Services.AddScoped<JwtTokenService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -38,10 +52,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

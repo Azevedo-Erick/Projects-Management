@@ -10,11 +10,13 @@ public class Task : BaseEntity
     public List<TaskAssignment> Assignments { get; set; }
     public List<Tag> Tags { get; set; }
     public List<Issue> Issues { get; set; }
+    public TaskStatus Status { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime ConclusionDate { get; set; }
     public DateTime DeadLine { get; set; }
 
     public int AssignerId { get; set; }
+    public int StatusId { get; set; }
 
 
 }

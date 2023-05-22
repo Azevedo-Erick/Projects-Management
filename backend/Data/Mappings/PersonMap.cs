@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ProjectsManagement.Data.Configurations;
+using ProjectsManagement.Data.Seeds;
 using ProjectsManagement.Models;
 
 namespace ProjectsManagement.Data.Mappings;
@@ -16,7 +17,7 @@ public class PersonMap : BaseEntityConfiguration<Person>
         builder.Property(x => x.ProfileImage).IsRequired().HasColumnName("ProfileImage");
         builder.HasMany(x => x.Addresses);
         builder.HasMany(x => x.Contacts);
-
+        builder.HasData(PersonSeed.GetPersons());
 
 
     }

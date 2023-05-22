@@ -6,6 +6,7 @@ using ProjectsManagement.Data;
 using ProjectsManagement.Data.Mappings;
 using ProjectsManagement.Dtos;
 using ProjectsManagement.Dtos.NotificationType;
+using ProjectsManagement.Extensions;
 using ProjectsManagement.Mappers;
 using ProjectsManagement.Models;
 using ProjectsManagement.QueryParams;
@@ -13,7 +14,7 @@ using ProjectsManagement.QueryParams;
 namespace ProjectsManagement.Controllers;
 
 [ApiController]
-[Authorize]
+//[Authorize]
 public class NotificationTypeController : ControllerBase
 {
     private readonly ProjectsManagementContext _context;
@@ -50,7 +51,11 @@ public class NotificationTypeController : ControllerBase
     [AllowAnonymous]
     public async Task<IActionResult> Post(CreateNotificationTypeDto dto)
     {
-        if (!ModelState.IsValid) { }
+        if (!ModelState.IsValid)
+        {
+            return StatusCode(400, new BaseResponseDto<ResponseNotificationTypeDto>(ModelState.GetErrors()));
+
+        }
 
         var data = NotificationTypeMapper.FromDtoToModel(dto);
 

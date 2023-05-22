@@ -22,10 +22,12 @@ public class ProjectsManagementContext : DbContext
     public DbSet<Person> Persons { get; set; }
     public DbSet<Role> Roles { get; set; }
     public DbSet<Tag> Tags { get; set; }
-
+    public DbSet<Member> Members { get; set; }
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<Project> Projects { get; set; }
     public DbSet<TaskAssignment> TaskAssignments { get; set; }
+    public DbSet<RolePermission> RolePermissions { get; set; }
+
     public DbSet<Task> Tasks { get; set; }
     public DbSet<Squad> Squads { get; set; }
     public DbSet<Milestone> Milestones { get; set; }
@@ -62,7 +64,8 @@ public class ProjectsManagementContext : DbContext
         modelBuilder.ApplyConfiguration(new IssueMap());
         modelBuilder.ApplyConfiguration(new TicketMap());
         modelBuilder.ApplyConfiguration(new TicketCommentMap());
-
+        modelBuilder.ApplyConfiguration(new RolePermissionMap());
+        modelBuilder.ApplyConfiguration(new MemberMap());
     }
 
 

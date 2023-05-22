@@ -8,7 +8,6 @@ public class Person : BaseEntity
     public string PasswordHash { get; set; }
     public DateTime DateOfBirth { get; set; }
 
-    public List<TaskAssignment> Tasks { get; set; }
     public List<Issue> Issue { get; set; }
 
 
