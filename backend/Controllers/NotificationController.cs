@@ -28,9 +28,8 @@ public class NotificationController : ControllerBase
     public async Task<IActionResult> Get([FromQuery] NotificationQueryParams queryParams)
     {
         var data = await _context.Notifications.AsQueryable().Apply(queryParams).Include(x => x.Recipient).Include(x => x.Type).AsNoTracking().ToListAsync();
-        return StatusCode(200, new BaseResponseDto<ResponseNotificationDto>(data.Select(NotificationMapper.FromModelToDto).ToList()));
+        return StatusCode(200, new BaseResponseDto<ResponseNotificationDto>(data.ConvertAll(NotificationMapper.FromModelToDto)));
     }
-
 
     [HttpGet("/v1/notifications/{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
@@ -43,15 +42,12 @@ public class NotificationController : ControllerBase
         return StatusCode(200, new BaseResponseDto<ResponseNotificationDto>(NotificationMapper.FromModelToDto(data)));
     }
 
-
-
     [HttpPost("/v1/notifications")]
     public async Task<IActionResult> Post(CreateNotificationDto dto)
     {
         if (!ModelState.IsValid)
         {
             return StatusCode(400);
-
         }
 
         var data = NotificationMapper.FromDtoToModel(dto);
@@ -75,15 +71,12 @@ public class NotificationController : ControllerBase
         return StatusCode(201, new BaseResponseDto<ResponseNotificationDto>(NotificationMapper.FromModelToDto(data)));
     }
 
-
-
     [HttpPatch("/v1/notifications/{id:int}")]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] CreateNotificationDto dto)
     {
         if (!ModelState.IsValid)
         {
             return StatusCode(400);
-
         }
 
         var data = await _context.Notifications.Where(x => x.Id == id).FirstOrDefaultAsync();

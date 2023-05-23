@@ -29,7 +29,7 @@ public class ActivityTypeController : ControllerBase
     public async Task<IActionResult> Get([FromQuery] ActivityTypeQueryParams queryParams)
     {
         var data = await _context.ActivityTypes.AsQueryable().Apply(queryParams).AsNoTracking().ToListAsync();
-        return StatusCode(200, new BaseResponseDto<ResponseActivityTypeDto>(data.Select(ActivityTypeMapper.FromModelToDto).ToList()));
+        return StatusCode(200, new BaseResponseDto<ResponseActivityTypeDto>(data.ConvertAll(ActivityTypeMapper.FromModelToDto)));
     }
 
 
