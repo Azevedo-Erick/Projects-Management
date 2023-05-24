@@ -35,10 +35,9 @@ public class CountryController : ControllerBase
             return StatusCode(
                 200,
                 new BaseResponseDto<ResponseCountryDto>(
-                    data.Select(
+                    data.ConvertAll(
                             x => CountryMapper.FromModelToDto(x)
-                        ).ToList()
-                    )
+                        ))
                 );
         }
         catch (Exception e)

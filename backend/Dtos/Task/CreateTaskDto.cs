@@ -10,7 +10,7 @@ public class CreateTaskDto
     public List<int> Tags { get; set; }
 
     public List<int> Issues { get; set; }
-    public TaskStatus Status { get; set; }
+    public int Status { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime ConclusionDate { get; set; }
     public DateTime DeadLine { get; set; }
