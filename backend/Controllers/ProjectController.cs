@@ -13,16 +13,16 @@ using ProjectsManagement.Services;
 namespace ProjectsManagement.Controllers;
 
 [ApiController]
-[Authorize]
+//[Authorize]
 public class ProjectController : ControllerBase
 {
     private readonly ProjectsManagementContext _context;
     private readonly ILogger _logger;
     private readonly ProjectService _projectService;
-    public ProjectController(ProjectsManagementContext context, ILogger logger, ProjectService projectService)
+    public ProjectController(ProjectsManagementContext context/* , ILogger logger */, ProjectService projectService)
     {
         this._context = context;
-        this._logger = logger;
+        /* this._logger = logger; */
         this._projectService = projectService;
     }
 
@@ -37,7 +37,7 @@ public class ProjectController : ControllerBase
         }
         catch (Exception e)
         {
-            _logger.LogError(EventIds.ExceptionOccurred, e, "Aconteceu um erro ao buscar os projetos");
+            //_logger.LogError(EventIds.ExceptionOccurred, e, "Aconteceu um erro ao buscar os projetos");
             return StatusCode(500, new BaseResponseDto<ResponseProjectDto>("Aconteceu um erro"));
         }
     }
@@ -52,7 +52,7 @@ public class ProjectController : ControllerBase
         }
         catch (Exception e)
         {
-            _logger.LogError(EventIds.ExceptionOccurred, e, "Aconteceu um erro ao buscar o projeto");
+            //_logger.LogError(EventIds.ExceptionOccurred, e, "Aconteceu um erro ao buscar o projeto");
             return StatusCode(500, new BaseResponseDto<ResponseProjectDto>("Aconteceu um erro"));
         }
     }
@@ -71,7 +71,7 @@ public class ProjectController : ControllerBase
         }
         catch (Exception e)
         {
-            _logger.LogError(EventIds.ExceptionOccurred, e, "Aconteceu um erro ao salvar o projeto");
+            //_logger.LogError(EventIds.ExceptionOccurred, e, "Aconteceu um erro ao salvar o projeto");
             return StatusCode(500, new BaseResponseDto<ResponseProjectDto>("Aconteceu um erro"));
         }
     }
@@ -90,7 +90,7 @@ public class ProjectController : ControllerBase
         }
         catch (Exception e)
         {
-            _logger.LogError(EventIds.ExceptionOccurred, e, "Aconteceu um erro ao atualizar o projeto");
+            //_logger.LogError(EventIds.ExceptionOccurred, e, "Aconteceu um erro ao atualizar o projeto");
             return StatusCode(500, new BaseResponseDto<ResponseProjectDto>("Aconteceu um erro"));
         }
     }
@@ -105,7 +105,7 @@ public class ProjectController : ControllerBase
         }
         catch (Exception e)
         {
-            _logger.LogError(EventIds.ExceptionOccurred, e, "Aconteceu um erro ao deletar o projeto");
+            //_logger.LogError(EventIds.ExceptionOccurred, e, "Aconteceu um erro ao deletar o projeto");
             return StatusCode(500, new BaseResponseDto<ResponseProjectDto>("Aconteceu um erro"));
         }
     }

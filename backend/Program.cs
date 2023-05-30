@@ -7,11 +7,10 @@ using ProjectsManagement.Data;
 using ProjectsManagement.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 
 var key = Encoding.ASCII.GetBytes(Configuration.JwtKey);
-
-
 
 builder.Services.AddAuthentication(x =>
     {
@@ -34,7 +33,7 @@ builder.Services.AddAuthentication(x =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddLogging();
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(options =>
     {
@@ -43,6 +42,7 @@ builder.Services.AddControllers()
 
 builder.Services.AddDbContext<ProjectsManagementContext>();
 builder.Services.AddScoped<JwtTokenService>();
+builder.Services.AddScoped<ProjectService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

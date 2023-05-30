@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ProjectsManagement.Data.Configurations;
 using ProjectsManagement.Models;
 
 namespace ProjectsManagement.Data.Mappings;
 
-public class MemberMap : IEntityTypeConfiguration<Member>
+public class MemberMap : BaseEntityConfiguration<Member>
 {
     public void Configure(EntityTypeBuilder<Member> builder)
     {

@@ -24,7 +24,7 @@ public class SquadController : ControllerBase
     [HttpGet("/v1/squads")]
     public async Task<IActionResult> Get()
     {
-        var data = await _context.Squads.Include(x => x.Leader).Include(x => x.Team).ToListAsync();
+        var data = await _context.Squads.Include(x => x.Team).ToListAsync();
         return StatusCode(200, new BaseResponseDto<List<ResponseSquadDto>>(data.ConvertAll(SquadMapper.FromModelToDto)));
     }
 
@@ -48,17 +48,11 @@ public class SquadController : ControllerBase
             return StatusCode(400);
         }
         var model = SquadMapper.FromDtoToModel(dto);
-        var leader = await _context.Persons.Where(x => x.Id == dto.LeaderId).FirstOrDefaultAsync();
-        if (leader == null)
-        {
-            return StatusCode(400);
-        }
         var members = await _context.Members.Where(x => dto.Members.Contains(x.Id)).ToListAsync();
         if (members == null)
         {
             return StatusCode(400);
         }
-        model.Leader = leader;
         model.Team = members;
 
         _context.Squads.Add(model);

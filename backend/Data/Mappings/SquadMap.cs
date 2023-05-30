@@ -11,7 +11,6 @@ public class SquadMap : BaseEntityConfiguration<Squad>
     public new void Configure(EntityTypeBuilder<Squad> builder)
     {
         builder.Property(x => x.Name).IsRequired().HasColumnName("Name");
-        builder.HasOne(x => x.Leader);
         builder.HasMany(x => x.Team);
 
 

@@ -37,7 +37,14 @@ public class ProjectService
     {
         try
         {
-            var data = ProjectMapper.FromDtoToModel(dto);
+            //var data = ProjectMapper.FromDtoToModel(dto);
+            var manager = await _context.Persons.FirstOrDefaultAsync(x => x.Id == dto.ManagerId) ?? throw new Exception("Não encontrado");
+            var data = new Project
+            {
+                Name = dto.Name,
+                Release = dto.Release,
+                Manager = manager
+            };
             await _context.Projects.AddAsync(data);
             _context.SaveChanges();
             return data;
