@@ -26,250 +26,160 @@ Um projeto para estudo do .net 6, tem como ideia ser um projeto que permita a ge
 
 ```mermaid
 classDiagram
-    class Employee{
-        -int Id
-        -List<Skill> Skills
-        -List<Task> Tasks
+    class Country {
+        + Name : string
     }
 
-     class Person {
-        -int Id
-        -string Name
-        -string Email
-        -string PasswordHash
-        -List<Permission> Role
-        -DateTime DateOfBirth
-        -string ProfileImage
-        -List<ContactInfo> ContactInfos
-        -List<Address> Addresses
-    }
-    
-    class Skill {
-        -int Id
-        -string Name
-    }
-    
-    class Role {
-        -int Id
-        -string Name
-        -List<Permission> Permissions
-    } 
-    
-
-    class Permission{
-        -int Id
-        -PERMISSION_TYPE Type
-        -string Name
-    }
-
-    class PERMISSION_TYPE{
-        CREATE,
-        READ
-        UPDATE,
-        DELETE,
-    }
-
-    class Task {
-        -int Id
-        -string Title
-        -Person Assigner
-        -List<Employee> AssignedTo
-        -Tag Tag
-        -List<Issue> Issues
-        -DateTime StartDate
-        -DateTime ConclusionDate
-        -string Description
-        -DateTime Deadline
-    }
-
-    class TASK_PRIORITY{
-        MINIMAL
-        LOW
-        MEDIUM
-        HIGH
-        CRITICAL
-    }
-    
     class Issue {
-        -int Id
-        -string Title
-        -string Text
-        -Person Author
-        -Task ResponseOf
-        -DateTime DateCreated
-        -DateTime DateResolved
-    }
-    
-    class Address {
-        -int Id
-        -string Street
-        -string Number
-        -string Complement
-        -string Neighborhood
-        -City City
-        -string ZipCode
-    } 
-
-    class City{
-        -int Id
-        -string Name
-        -State State
+        + Title : string
+        + Text : string
+        + Author : Person?
+        + Project : Project?
     }
 
-    class ProjectMember{
-        <<Abstract>>
-        -int Id
-        -Role Role
-        -Person Person
+    class Member {
+        + StartDate : DateTime
+        + EndDate : DateTime
+        + Person : Person
+        + Role : Role
+        + Tasks : List<TaskAssignment>
     }
 
-    class MemberType{
-        -int Id
-        -string Label
-    }
-    
-
-    class State{
-        -int Id
-        -string Name
-        -Country Name
-    }
-
-    class Country{
-        -int Id
-        -string Name
-    }
-    
-    class ContactInfo {
-        -int Id
-        -ContactType Type
-        -string Value
-    }
-
-    class ContactType{
-        -int Id
-        -string Name
-    }
-	
-    class Tag {
-        -int Id
-        -string Title
-        -string HexColor
-    }
-    
-    class Project {
-        -int Id
-        -string Name
-        -Employee Manager
-        -string Release
-        -List<Squad> Squads
-        -List<Task> Tasks
-        -List<Milestone> Milestones
-    }
-    
-    class Squad {
-        -int Id
-        -string Name
-        -Employee Leader
-        -List<Employee> Team
-        -List<Task> Tasks
-    }
-    
     class Milestone {
-        -int Id
-        -string Title
-        -string Description
-        -DateTime StartDate
-        -DateTime Deadline
-        -List<Task> Tasks
-    }
-
-    class Ticket{
-        -int Id
-        -string Title
-        -string Description
-        -DateTime CreatedAt
-        -Person Author
-        -Project Project
-        -Task Task
-        -List<Issue> Issues
-        -DateTime ResolutionDate
-    }
-
-    class TicketComment{
-        -int Id
-        -Ticket Ticket
-        -Person Author
-        -string Text
+        + Title : string
+        + Description : string
+        + StartDate : DateTime
+        + DeadLine : DateTime
+        + Tasks : List<Task>
     }
 
     class Notification {
-    -int Id
-    -string Message
-    -NotificationType Type
-    -bool IsRead
-    -DateTime CreatedAt
-    -Person Recipient
+        + Message : string
+        + Type : NotificationType
+        + IsRead : bool
+        + Recipient : Person
     }
 
-    class NotificationType{
-        -int Id
-        -string Name
+    class NotificationType {
+        + Name : string
     }
 
-	class Stakeholder {
-    -int Id
-    -List<Project> Projects
-    }
-    
-    class ActivityLog{
-        -int Id
-        -DateTime Timestamp
-        -Person Person
-        -ActivityType ActivityType
-        -string Description
-    }
-    class ActivityType{
-        -int Id
-        -string Name
+    class Permission {
+        + Name : string
+        + Roles : List<RolePermission>?
     }
 
-  
-	Project "*"-->"*" Squad 
-	Project "*"-->"1" Person 
-	Squad "*" --> "1" Employee 
-	Squad "*" --> "*" Employee 
-	Employee "*" --> "*" Skill 
-	Person "*" --> "*" Role 
-	Person "1" --> "1" Address 
-	Person "0..**" --> "*" ContactInfo 
-	Task "*" --> "*" Employee 
-	Issue "*" --> "1" Task 
-	Tag "1" --> "*" Task 
-	Milestone "1" -- "*" Task 
-	Project "1" -- "*" Milestone 
-	Stakeholder "*" -- "*" Task 
-	Stakeholder "*" -- "*" Project
-	Stakeholder "1" --> "*" Address 
-	Stakeholder "0..**" --> "*" ContactInfo 
-    Ticket"0..*" --o "1" Project
-    Ticket "*"--> "1" Person
-    Ticket "1"-->"1" Task
-    Ticket "1"-->"*" TicketComment
-    ContactInfo "*"-->"1" ContactType
-    Role "*" --> "*" Permission
-    Permission "*" --> "1" PERMISSION_TYPE
-    Notification "*" --> "1" NotificationType
-    Person "1"-->"*"Notification
-    Address "*"-->"1" City
-    City "*"-->"1" State
-    State "*"-->"1" Country
-    Task "*" --> "1" TASK_PRIORITY
-    ActivityLog "*" --> "1" ActivityType
-    ActivityLog "*" --> "1" Person
-    Employee  --|>  ProjectMember
-    Stakeholder  --|>  ProjectMember
-    ProjectMember "1"-->"*" MemberType
+    class Person {
+        + Name : string
+        + Email : string
+        + PasswordHash : string
+        + DateOfBirth : DateTime
+        + Issue : List<Issue>
+        + ProfileImage : string
+        + Contacts : List<ContactInfo>
+        + Addresses : List<Address>
+    }
+
+    class Project {
+        + Name : string
+        + Manager : Person
+        + Release : string
+        + Squads : List<Squad>
+        + Issues : List<Issue>
+        + Milestones : List<Milestone>
+    }
+
+    class Role {
+        + Name : string
+        + Permissions : List<RolePermission>?
+    }
+
+    class Squad {
+        + Name : string
+        + Team : List<Member>
+    }
+
+    class State {
+        + Name : string
+        + Country : Country
+    }
+
+    class Tag {
+        + Title : string
+        + HexColor : string
+    }
+
+    class Task {
+        + Title : string
+        + Description : string
+        + Assigner : Person
+        + Assignments : List<TaskAssignment>
+        + Tags : List<Tag>
+        + Issues : List<Issue>
+        + Status : TaskStatus
+        + StartDate : DateTime
+        + ConclusionDate : DateTime
+        + DeadLine : DateTime
+    }
+
+    class TaskAssignment {
+        + MemberId : int
+        + Member : Member
+        + TaskId : int
+        + Task : Task
+    }
+
+    class TaskStatus {
+        + Name : string
+        + Tasks : List<Task>?
+    }
+
+    class Ticket {
+        + Title : string
+        + Description : string
+        + Author : Person
+        + Project : Project?
+        + ResolutionDate : DateTime
+    }
+
+    class TicketComment {
+        + Text : string
+        + Author : Person?
+        + Ticket : Ticket?
+    }
+
+    Country --> "*" Person
+    Issue --> "*" Person
+    Issue --> "*" Project
+    Member --> "*" TaskAssignment
+    Member --> Person
+    Member --> Role
+    Milestone --> "*" Task
+    Notification --> Person
+    NotificationType --> "*" Notification
+    Permission --> "*" RolePermission
+    Permission --> "*" Role
+    Person --> "*" Issue
+    Person --> "*" ContactInfo
+    Person --> "*" Address
+    Project --> Person
+    Project --> "*" Squad
+    Project --> "*" Issue
+    Project --> "*" Milestone
+    Role --> "*" RolePermission
+    Squad --> "*" Member
+    State --> Country
+    Task --> Person
+    Task --> "*" TaskAssignment
+    Task --> "*" Tag
+    Task --> "*" Issue
+    Task --> TaskStatus
+    TaskAssignment --> Member
+    TaskAssignment --> Task
+    TaskStatus --> "*" Task
+    Ticket --> Person
+    Ticket --> "*" TicketComment
+    Ticket --> Project
 ```
 
 
