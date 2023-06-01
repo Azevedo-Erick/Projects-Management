@@ -2,7 +2,7 @@ import 'package:frontend/data/models/project_model.dart';
 import 'package:frontend/data/repositories/project_repository.dart';
 import 'package:get/get.dart';
 
-class HomeController extends GetxController {
+class ProjectsController extends GetxController {
   final ProjectRepository projectRepository;
 
   final List<ProjectModel> _projects = <ProjectModel>[].obs;
@@ -11,7 +11,7 @@ class HomeController extends GetxController {
   List<ProjectModel> get projects => _projects;
   RxBool get isLoading => _isLoading;
 
-  HomeController({required this.projectRepository});
+  ProjectsController({required this.projectRepository});
 
   getProjects() async {
     _isLoading.value = true;

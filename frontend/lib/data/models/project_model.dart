@@ -1,13 +1,16 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 class ProjectModel {
+  final int id;
   final String name;
   final String release;
 
-  ProjectModel({required this.name, required this.release});
+  ProjectModel({required this.name, required this.id, required this.release});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'id': id,
       'name': name,
       'release': release,
     };
@@ -15,8 +18,9 @@ class ProjectModel {
 
   factory ProjectModel.fromMap(Map<String, dynamic> map) {
     return ProjectModel(
-      name: map['Name'] as String,
-      release: map['Release'] as String,
+      id: map['id'] as int,
+      name: map['name'] as String,
+      release: map['release'] as String,
     );
   }
 
