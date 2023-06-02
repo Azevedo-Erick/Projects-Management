@@ -16,7 +16,7 @@ class ProjectsController extends GetxController {
   getProjects() async {
     _isLoading.value = true;
 
-    final response = await projectRepository.getProjects();
+    final response = await projectRepository.getAll();
 
     _projects.addAll(response);
 

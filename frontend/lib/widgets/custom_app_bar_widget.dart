@@ -25,11 +25,15 @@ class CustomAppBarWidget extends StatelessWidget
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Icon(
-                Icons.menu_rounded,
-                color: Color(0xfff59e0b),
-                size: 58,
-              ),
+              GestureDetector(
+                  onTap: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                  child: const Icon(
+                    Icons.menu_rounded,
+                    color: Color(0xfff59e0b),
+                    size: 58,
+                  )),
               const Spacer(),
               Text(name,
                   style: GoogleFonts.montserrat(

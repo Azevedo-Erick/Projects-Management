@@ -9,7 +9,7 @@ class ProjectRepository {
 
   ProjectRepository({required this.dio});
 
-  Future<List<ProjectModel>> getProjects() async {
+  Future<List<ProjectModel>> getAll() async {
     final result = await dio.get('https://localhost:7289/v1/projects');
     final List<ProjectModel> projects = [];
     sleep(const Duration(seconds: 5));
