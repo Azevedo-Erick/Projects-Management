@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomAppBarWidget extends StatelessWidget
     implements PreferredSizeWidget {
@@ -21,7 +22,22 @@ class CustomAppBarWidget extends StatelessWidget
       child: Column(
         children: [
           Row(
-            children: [const Icon(Icons.menu_rounded), Text(name)],
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Icon(
+                Icons.menu_rounded,
+                color: Color(0xfff59e0b),
+                size: 58,
+              ),
+              const Spacer(),
+              Text(name,
+                  style: GoogleFonts.montserrat(
+                    fontSize: 32,
+                  )),
+              const Spacer(),
+              const Spacer()
+            ],
           ),
           body
         ],
@@ -30,5 +46,5 @@ class CustomAppBarWidget extends StatelessWidget
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 56);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 240);
 }
