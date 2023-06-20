@@ -1,6 +1,7 @@
 using AspNetCore.IQueryable.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ProjectsManagement.Data;
 using ProjectsManagement.Dtos;
@@ -18,9 +19,12 @@ public class ContactTypeController : ControllerBase
 
     private readonly ProjectsManagementContext _context;
 
-    public ContactTypeController(ProjectsManagementContext context)
+    private readonly IMapper _mapper;
+    public ContactTypeController(ProjectsManagementContext context, IMapper mapper)
     {
         this._context = context;
+        _mapper = mapper;
+
     }
 
     [AllowAnonymous]

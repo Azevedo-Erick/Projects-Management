@@ -1,4 +1,5 @@
 using AspNetCore.IQueryable.Extensions;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,10 +17,13 @@ namespace ProjectsManagement.Controllers;
 public class ActivityLogController : ControllerBase
 {
     private readonly ProjectsManagementContext _context;
+    private readonly IMapper _mapper;
 
-    public ActivityLogController(ProjectsManagementContext context)
+    public ActivityLogController(ProjectsManagementContext context, IMapper mapper)
     {
         this._context = context;
+        _mapper = mapper;
+
     }
     [AllowAnonymous]
     [HttpGet("/v1/activities-logs")]

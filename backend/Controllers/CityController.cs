@@ -1,4 +1,5 @@
 using AspNetCore.IQueryable.Extensions;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,10 +18,12 @@ namespace ProjectsManagement.Controllers;
 public class CityController : ControllerBase
 {
     private readonly ProjectsManagementContext _context;
+    private readonly IMapper _mapper;
 
-    public CityController(ProjectsManagementContext context)
+    public CityController(ProjectsManagementContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     [AllowAnonymous]
@@ -39,7 +42,7 @@ public class CityController : ControllerBase
                 200,
                 new BaseResponseDto<ResponseCityDto>(
                     data.ConvertAll(
-                            x => CityMapper.FromModelToDto(x)
+                            x => _mapper.Map<ResponseCityDto>(x)
                         ))
                 );
         }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectsManagement.Data;
+using AutoMapper;
 using ProjectsManagement.Dtos;
 using ProjectsManagement.Dtos.Ticket;
 using ProjectsManagement.Dtos.TicketComment;
@@ -15,9 +16,12 @@ namespace ProjectsManagement.Controllers;
 public class TicketCommentController : ControllerBase
 {
     private readonly ProjectsManagementContext _context;
-    public TicketCommentController(ProjectsManagementContext context)
+    private readonly IMapper _mapper;
+    public TicketCommentController(ProjectsManagementContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
+
     }
     [AllowAnonymous]
     [HttpGet("/v1/ticket-comments")]

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectsManagement.Common;
 using ProjectsManagement.Data;
+using AutoMapper;
 using ProjectsManagement.Dtos;
 using ProjectsManagement.Dtos.Project;
 using ProjectsManagement.Extensions;
@@ -19,11 +20,14 @@ public class ProjectController : ControllerBase
     private readonly ProjectsManagementContext _context;
     private readonly ILogger _logger;
     private readonly ProjectService _projectService;
-    public ProjectController(ProjectsManagementContext context/* , ILogger logger */, ProjectService projectService)
+    private readonly IMapper _mapper;
+    public ProjectController(ProjectsManagementContext context/* , ILogger logger */, ProjectService projectService, IMapper mapper)
     {
         this._context = context;
         /* this._logger = logger; */
         this._projectService = projectService;
+        _mapper = mapper;
+
     }
 
     [AllowAnonymous]
@@ -33,7 +37,7 @@ public class ProjectController : ControllerBase
         try
         {
             var data = await _context.Projects.Include(x => x.Manager).Include(x => x.Milestones).Include(x => x.Squads).ToListAsync();
-            return StatusCode(200, new BaseResponseDto<List<ResponseProjectDto>>(data.ConvertAll(ProjectMapper.FromModelToDto)));
+            return StatusCode(200, new BaseResponseDto<ResponseProjectDto>(data.ConvertAll(ProjectMapper.FromModelToDto)));
         }
         catch (Exception e)
         {

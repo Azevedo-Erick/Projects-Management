@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 using ProjectsManagement.Data;
 using ProjectsManagement.Dtos;
 using ProjectsManagement.Dtos.Issue;
@@ -15,9 +16,12 @@ public class IssueController : ControllerBase
 {
     private readonly ProjectsManagementContext _context;
 
-    public IssueController(ProjectsManagementContext context)
+    private readonly IMapper _mapper;
+    public IssueController(ProjectsManagementContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
+
     }
 
     [AllowAnonymous]

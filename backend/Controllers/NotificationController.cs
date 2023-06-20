@@ -1,6 +1,7 @@
 using AspNetCore.IQueryable.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using ProjectsManagement.Data;
@@ -18,9 +19,12 @@ public class NotificationController : ControllerBase
 {
     private readonly ProjectsManagementContext _context;
 
-    public NotificationController(ProjectsManagementContext context)
+    private readonly IMapper _mapper;
+    public NotificationController(ProjectsManagementContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
+
     }
 
     [AllowAnonymous]

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectsManagement.Data;
+using AutoMapper;
 using ProjectsManagement.Dtos;
 using ProjectsManagement.Dtos.Country;
 using ProjectsManagement.Extensions;
@@ -18,9 +19,12 @@ public class CountryController : ControllerBase
 {
     private readonly ProjectsManagementContext _context;
 
-    public CountryController(ProjectsManagementContext context)
+    private readonly IMapper _mapper;
+    public CountryController(ProjectsManagementContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
+
     }
 
     [AllowAnonymous]

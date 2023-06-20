@@ -8,7 +8,13 @@ public class ProjectMapper
 {
     public static ResponseProjectDto FromModelToDto(Project model)
     {
-        return new ResponseProjectDto();
+        return new ResponseProjectDto
+        {
+            Name = model.Name,
+            Id = model.Id,
+            /* Milestones = model.Milestones, */
+            Release = model.Release
+        };
     }
     public static Project FromDtoToModel(CreateProjectDto dto)
     {

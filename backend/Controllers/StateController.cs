@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectsManagement.Data;
+using AutoMapper;
 using ProjectsManagement.Dtos;
 using ProjectsManagement.Dtos.Country;
 using ProjectsManagement.Dtos.State;
@@ -17,9 +18,12 @@ namespace ProjectsManagement.Controllers
     {
         private readonly ProjectsManagementContext _context;
 
-        public StateController(ProjectsManagementContext context)
+        private readonly IMapper _mapper;
+        public StateController(ProjectsManagementContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
+
         }
 
         [AllowAnonymous]

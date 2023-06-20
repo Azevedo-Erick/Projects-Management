@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectsManagement.Data;
+using AutoMapper;
 using ProjectsManagement.Dtos;
 using ProjectsManagement.Dtos.Squad;
 using ProjectsManagement.Mappers;
@@ -15,9 +16,12 @@ public class SquadController : ControllerBase
 {
     private readonly ProjectsManagementContext _context;
 
-    public SquadController(ProjectsManagementContext context)
+    private readonly IMapper _mapper;
+    public SquadController(ProjectsManagementContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
+
     }
 
     [AllowAnonymous]

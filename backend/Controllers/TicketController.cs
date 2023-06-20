@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectsManagement.Data;
 using ProjectsManagement.Dtos;
+using AutoMapper;
 using ProjectsManagement.Dtos.Ticket;
 using ProjectsManagement.Mappers;
 using ProjectsManagement.Models;
@@ -14,9 +15,12 @@ namespace ProjectsManagement.Controllers;
 public class TicketController : ControllerBase
 {
     private readonly ProjectsManagementContext _context;
-    public TicketController(ProjectsManagementContext context)
+    private readonly IMapper _mapper;
+    public TicketController(ProjectsManagementContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
+
     }
     [AllowAnonymous]
     [HttpGet("/v1/tickets")]

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectsManagement.Data;
+using AutoMapper;
 using ProjectsManagement.Dtos;
 using ProjectsManagement.Dtos.Task;
 using ProjectsManagement.Extensions;
@@ -16,9 +17,12 @@ public class TaskController : ControllerBase
 {
     private readonly ProjectsManagementContext _context;
 
-    public TaskController(ProjectsManagementContext context)
+    private readonly IMapper _mapper;
+    public TaskController(ProjectsManagementContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
+
     }
 
     [AllowAnonymous]

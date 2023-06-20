@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectsManagement.Data;
 using ProjectsManagement.Data.Mappings;
+using AutoMapper;
 using ProjectsManagement.Dtos;
 using ProjectsManagement.Dtos.NotificationType;
 using ProjectsManagement.Extensions;
@@ -19,9 +20,12 @@ public class NotificationTypeController : ControllerBase
 {
     private readonly ProjectsManagementContext _context;
 
-    public NotificationTypeController(ProjectsManagementContext context)
+    private readonly IMapper _mapper;
+    public NotificationTypeController(ProjectsManagementContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
+
     }
 
 

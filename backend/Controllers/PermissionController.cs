@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectsManagement.Data;
+using AutoMapper;
 using ProjectsManagement.Dtos;
 using ProjectsManagement.Dtos.Permission;
 using ProjectsManagement.Mappers;
@@ -14,9 +15,12 @@ namespace ProjectsManagement.Controllers
     {
         private readonly ProjectsManagementContext _context;
 
-        public PermissionController(ProjectsManagementContext context)
+        private readonly IMapper _mapper;
+        public PermissionController(ProjectsManagementContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
+
         }
 
         [AllowAnonymous]

@@ -2,6 +2,8 @@ using AspNetCore.IQueryable.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using ProjectsManagement.Authentication;
 using ProjectsManagement.Data;
 using ProjectsManagement.Dtos;
 using ProjectsManagement.Dtos.Person;
@@ -19,9 +21,12 @@ public class PersonController : ControllerBase
 
     private readonly ProjectsManagementContext _context;
 
-    public PersonController(ProjectsManagementContext context)
+    private readonly IMapper _mapper;
+    public PersonController(ProjectsManagementContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
+
     }
 
     [AllowAnonymous]
@@ -32,6 +37,7 @@ public class PersonController : ControllerBase
         return StatusCode(200, new BaseResponseDto<ResponsePersonDto>(data.Select(PersonMapper.FromModelToDto).ToList()));
     }
 
+    [HasPermission(Authentication.Permission.ReadMember)]
     [HttpGet("/v1/persons/{id:int}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {

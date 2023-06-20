@@ -1,5 +1,6 @@
 using AspNetCore.IQueryable.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectsManagement.Data;
@@ -18,9 +19,12 @@ public class ContactInfoController : ControllerBase
 
     private readonly ProjectsManagementContext _context;
 
-    public ContactInfoController(ProjectsManagementContext context)
+    private readonly IMapper _mapper;
+    public ContactInfoController(ProjectsManagementContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
+
     }
 
     [AllowAnonymous]
@@ -28,6 +32,7 @@ public class ContactInfoController : ControllerBase
     public async Task<IActionResult> Get([FromQuery] ContactInfoQueryParams queryParams)
     {
         var data = await _context.ContactInfos.AsQueryable().Apply(queryParams).AsNoTracking().ToListAsync();
+
         return StatusCode(
             200,
             new BaseResponseDto<ResponseContactInfoDto>(
@@ -36,6 +41,8 @@ public class ContactInfoController : ControllerBase
                     ).ToList()
                 )
             );
+
+
     }
 
 

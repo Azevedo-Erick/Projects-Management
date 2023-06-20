@@ -1,5 +1,6 @@
 using AspNetCore.IQueryable.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectsManagement.Data;
@@ -18,10 +19,13 @@ public class ActivityTypeController : ControllerBase
 {
 
     private readonly ProjectsManagementContext _context;
+    private readonly IMapper _mapper;
 
-    public ActivityTypeController(ProjectsManagementContext context)
+    public ActivityTypeController(ProjectsManagementContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
+
     }
 
     [AllowAnonymous]
